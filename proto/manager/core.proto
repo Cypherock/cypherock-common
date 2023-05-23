@@ -7,6 +7,8 @@ import "manager/auth_card.proto";
 import "manager/get_logs.proto";
 import "manager/train_user.proto";
 
+import "error.proto";
+
 package manager;
 
 message Query {
@@ -28,5 +30,6 @@ message Result {
     AuthCardResponse auth_card = 4;
     GetLogsResponse get_logs = 5;
     TrainUserResponse train_user = 6;
+    error.CommonError common_error = 8;
   }
 }

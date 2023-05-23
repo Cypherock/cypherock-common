@@ -4,6 +4,8 @@ import "evm/get_public_keys.proto";
 import "evm/sign_txn.proto";
 import "evm/sign_msg.proto";
 
+import "error.proto";
+
 package evm;
 
 message Query {
@@ -19,5 +21,6 @@ message Result {
     GetPublicKeysResponse get_public_keys = 1;
     SignTxnResponse sign_txn = 2;
     SignMsgResponse sign_msg = 3;
+    error.CommonError common_error = 4;
   }
 }
