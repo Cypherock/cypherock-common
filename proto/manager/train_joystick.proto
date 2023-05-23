@@ -23,13 +23,12 @@ message TrainJoystickRequest {
 }
 
 message TrainJoystickResult {
-  bool is_success = 1;
 }
 
 message TrainJoystickResponse {
   oneof response {
-    TrainJoystickResult joystick = 1;
+    TrainJoystickResult result = 1;
 
-    error.CommonError common_error = 3;
+    error.CommonError common_error = 2;
   }
 }

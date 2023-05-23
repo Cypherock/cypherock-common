@@ -24,7 +24,7 @@ message TrainCardResult {
 
 message TrainCardResponse {
   oneof response {
-    TrainCardResult card_train = 1;
+    TrainCardResult result = 1;
 
     error.CommonError common_error = 2;
   }
