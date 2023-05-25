@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "error.proto";
+
+package manager;
+
+enum TrainJoystickStatus {
+  TRAIN_JOYSTICK_INIT = 0;
+  TRAIN_JOYSTICK_UP = 1;
+  TRAIN_JOYSTICK_RIGHT = 2;
+  TRAIN_JOYSTICK_DOWN = 3;
+  TRAIN_JOYSTICK_LEFT = 4;
+  TRAIN_JOYSTICK_CENTER = 5;
+}
+
+message TrainJoystickInitiate {
+}
+
+message TrainJoystickRequest {
+  oneof request {
+    TrainJoystickInitiate initiate = 1;
+  }
+}
+
+message TrainJoystickResult {
+}
+
+message TrainJoystickResponse {
+  oneof response {
+    TrainJoystickResult result = 1;
+
+    error.CommonError common_error = 2;
+  }
+}

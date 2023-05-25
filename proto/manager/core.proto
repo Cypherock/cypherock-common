@@ -5,7 +5,8 @@ import "manager/get_wallets.proto";
 import "manager/auth_device.proto";
 import "manager/auth_card.proto";
 import "manager/get_logs.proto";
-import "manager/train_user.proto";
+import "manager/train_joystick.proto";
+import "manager/train_card.proto";
 
 import "error.proto";
 
@@ -18,7 +19,8 @@ message Query {
     AuthDeviceRequest auth_device = 3;
     AuthCardRequest auth_card = 4;
     GetLogsRequest get_logs = 5;
-    TrainUserRequest train_user = 6;
+    TrainJoystickRequest train_joystick = 6;
+    TrainCardRequest train_card = 7;
   }
 }
 
@@ -29,7 +31,8 @@ message Result {
     AuthDeviceResponse auth_device = 3;
     AuthCardResponse auth_card = 4;
     GetLogsResponse get_logs = 5;
-    TrainUserResponse train_user = 6;
+    TrainJoystickResponse train_joystick = 6;
+    TrainCardResponse train_card = 7;
     error.CommonError common_error = 8;
   }
 }
