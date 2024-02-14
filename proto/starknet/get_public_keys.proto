@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+import "error.proto";
+
+package starknet;
+/**
+ * Example of successful get_public_keys generation
+ *
+ *        Host                       Device
+ * GetPublicKeysIntiateRequest  =>
+ *                            <= GetPublicKeysResultResponse (1-10 public keys)
+ * GetPublicKeysFetchNextRequest =>
+ *                            <= GetPublicKeysResultResponse (11-20 public keys)
+ * GetPublicKeysFetchNextRequest =>
+ *                            <= GetPublicKeysResultResponse (21-30 public keys)
+ */
+
+
+/**
+ * Example of successful get_public_key generation
+ *
+ *        Host                       Device
+ * GetPublicKeysIntiateRequest  =>
+ *                            <= GetPublicKeysResultResponse (1 public key to be sent after user confirmation)
+ */
+
+enum GetPublicKeysStatus {
+  GET_PUBLIC_KEYS_STATUS_INIT = 0;
+  GET_PUBLIC_KEYS_STATUS_CONFIRM = 1;
+  GET_PUBLIC_KEYS_STATUS_SEED_GENERATED = 2;
+  GET_PUBLIC_KEYS_STATUS_VERIFY = 3;
+}
+
+message GetPublicKeysDerivationPath {
+  repeated uint32 path = 1;
+}
+
+message GetPublicKeysIntiateRequest {
+  bytes wallet_id = 1;
+
+  /*
+   * address: m/44'/9004'/0'/0/0
+   */
+  repeated GetPublicKeysDerivationPath derivation_paths = 2;
+}
+
+message GetPublicKeysFetchNextRequest {
+}
+
+message GetPublicKeysResultResponse {
+  repeated bytes public_keys = 1;
+}
+
+message GetPublicKeysRequest {
+  oneof request {
+    GetPublicKeysIntiateRequest initiate = 1;
+    GetPublicKeysFetchNextRequest fetch_next = 2;
+  }
+}
+
+message GetPublicKeysResponse {
+  oneof response {
+    GetPublicKeysResultResponse result = 1;
+
+    error.CommonError common_error = 2;
+  }
+}
