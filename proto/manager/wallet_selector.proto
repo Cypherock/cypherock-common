@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package manager;
+
+import "error.proto";
+
+import "manager/common.proto";
+
+message SelectWalletIntiateRequest {
+}
+
+message SelectWalletResultResponse {
+  WalletItem wallet = 1;
+}
+
+message SelectWalletRequest {
+  oneof request {
+    SelectWalletIntiateRequest initiate = 1;
+  }
+}
+
+message SelectWalletResponse {
+  oneof response {
+    SelectWalletResultResponse result = 1;
+
+    error.CommonError common_error = 2;
+  }
+}

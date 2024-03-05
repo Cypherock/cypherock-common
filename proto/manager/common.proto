@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package manager;
+
+message WalletItem {
+  bytes id = 1;
+  string name = 2;
+  bool hasPin = 3;
+  bool hasPassphrase = 4;
+  /*
+   * This field determines whether the particular wallet is in usable state
+   * It does not indicate why the wallet is not usable.
+   */ 
+  bool isValid = 5;
+}
