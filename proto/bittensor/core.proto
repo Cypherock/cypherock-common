@@ -18,7 +18,7 @@ message Result {
   oneof response {
     GetPublicKeysResponse get_public_keys = 1;
     GetPublicKeysResponse get_user_verified_public_key = 2;
-    error.CommonError common_error = 3;f
+    error.CommonError common_error = 3;
     SignTxnResponse sign_txn = 4;
   }
 }
