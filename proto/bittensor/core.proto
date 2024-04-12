@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "bittensor/get_public_keys.proto";
+import "bittensor/sign_txn.proto";
+import "error.proto";
+
+package bittensor;
+
+message Query {
+  oneof request {
+    GetPublicKeysRequest get_public_keys = 1;
+    GetPublicKeysRequest get_user_verified_public_key = 2;
+    SignTxnRequest sign_txn = 3;
+  }
+}
+
+message Result {
+  oneof response {
+    GetPublicKeysResponse get_public_keys = 1;
+    GetPublicKeysResponse get_user_verified_public_key = 2;
+    error.CommonError common_error = 3;f
+    SignTxnResponse sign_txn = 4;
+  }
+}
