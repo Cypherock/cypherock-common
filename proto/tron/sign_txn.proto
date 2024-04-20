@@ -1,25 +1,32 @@
 syntax = "proto3";
 
+import "common.proto";
 import "error.proto";
+
 
 package tron;
 
 /**
+ * Example:
+ *
  *        Host                       Device
  *
  * SignTxnInitiateRequest  => 
  *                         <= SignTxnConfirmationResponse
- *
- * SignTxnUnsignedTxn      =>
- *                         <= SignTxnUnsignedTxnAccepted
+ * SignTxnData             =>
+ *                         <= SignTxnDataAccepted
+ *                        ....
+ * SignTxnData             =>
+ *                         <= SignTxnDataAccepted
  *
  * **** Device has all transaction information ****
  *
+ * SignTxnVerifyTxnRequest =>
+ *                         <= SignTxnVerifyTxnResponse
  *
  * SignTxnSignatureRequest =>
  *                         <= SignTxnSignatureResponse
  */
-
 enum SignTxnStatus {
   SIGN_TXN_STATUS_INIT = 0;
   SIGN_TXN_STATUS_CONFIRM = 1;
@@ -28,40 +35,53 @@ enum SignTxnStatus {
 }
 
 message SignTxnInitiateRequest {
-  bytes wallet_id = 1;
-  repeated uint32 derivation_path = 2;
-}
-
-message SignTxnUnsignedTxn {
-  bytes txn = 1;
-}
-
-message SignTxnSignatureRequest {
+  bytes walletId = 1;
+  repeated uint32 derivationPath = 2;
+  uint32 transaction_size = 3;
 }
 
 message SignTxnConfirmationResponse {
 }
 
-message SignTxnUnsignedTxnAccepted {
+message SignTxnData {
+  common.ChunkPayload chunk_payload = 1;
+}
+
+message SignTxnDataAccepted {
+  common.ChunkAck chunk_ack = 1;
+}
+
+message SignTxnVerifyTxnRequest {
+}
+
+message SignTxnVerifyTxnResponse {
 }
 
 message SignTxnSignatureResponse {
   bytes signature = 1;
 }
 
+message SignTxnSignatureRequest {
+  bytes blockhash = 1;
+}
+
+
 message SignTxnRequest {
   oneof request {
     SignTxnInitiateRequest initiate = 1;
-    SignTxnUnsignedTxn txn = 2;
-    SignTxnSignatureRequest signature = 3;
+    SignTxnData txn_data = 2;
+    SignTxnVerifyTxnRequest verify = 3;
+    SignTxnSignatureRequest signature = 4;
   }
 }
 
 message SignTxnResponse {
   oneof response {
     SignTxnConfirmationResponse confirmation = 1;
-    SignTxnSignatureResponse signature = 2;
-    SignTxnUnsignedTxnAccepted unsigned_txn_accepted = 3;
-    error.CommonError common_error = 4;
+    SignTxnDataAccepted data_accepted = 2;
+    SignTxnVerifyTxnResponse verify  = 3;
+    SignTxnSignatureResponse signature = 4;
+
+    error.CommonError common_error = 5;
   }
 }
