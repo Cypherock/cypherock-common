@@ -1,11 +1,12 @@
 syntax = "proto3";
 
 import "error.proto";
+import "common.proto";
 
 package btc;
 
 /**
- * Example where there are 3 inputs and 2 outputs in the txn
+ * Example where there are 2 inputs and 2 outputs in the txn
  *
  *        Host                       Device
  *
@@ -15,12 +16,19 @@ package btc;
  *                         <= SignTxnMetadataAccepted
  *
  *
- * SignTxnInput            =>
- *                         <= SignTxnInputAccepted
- * SignTxnInput            =>
- *                         <= SignTxnInputAccepted
- * SignTxnInput            =>
- *                         <= SignTxnInputAccepted
+ * 1st Input
+ * SignTxnInputChunk       =>
+ *                         <= SignTxnInputChunkAccepted
+ *                        ....
+ * SignTxnInputChunk       =>
+ *                         <= SignTxnInputChunkAccepted
+ *
+ * 2nd Input
+ * SignTxnInputChunk       =>
+ *                         <= SignTxnInputChunkAccepted
+ *                        ....
+ * SignTxnInputChunk       =>
+ *                         <= SignTxnInputChunkAccepted
  *
  *
  * SignTxnOutput           =>
@@ -65,7 +73,12 @@ message SignTxnMetadata {
 message SignTxnMetadataAccepted {
 }
 
-message SignTxnInputAccepted {
+message SignTxnInputChunk {
+  common.ChunkPayload chunk_payload = 1;
+}
+
+message SignTxnInputChunkAccepted {
+  common.ChunkAck chunk_ack = 1;
 }
 
 message SignTxnInput {
@@ -106,20 +119,24 @@ message SignTxnSignatureResponse {
 }
 
 message SignTxnRequest {
+  reserved 3;
+
   oneof request {
     SignTxnInitiateRequest initiate = 1;
     SignTxnMetadata meta = 2;
-    SignTxnInput input = 3;
+    SignTxnInputChunk input = 6;
     SignTxnOutput output = 4;
     SignTxnSignatureRequest signature = 5;
   }
 }
 
 message SignTxnResponse {
+  reserved 3;
+  
   oneof response {
     SignTxnConfirmationResponse confirmation = 1;
     SignTxnMetadataAccepted meta_accepted = 2;
-    SignTxnInputAccepted input_accepted = 3;
+    SignTxnInputChunkAccepted input_accepted = 7;
     SignTxnOutputAccepted output_accepted = 4;
     SignTxnSignatureResponse signature = 5;
 
