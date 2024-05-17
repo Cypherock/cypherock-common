@@ -6,7 +6,7 @@ import "common.proto";
 package btc;
 
 /**
- * Example where there are 2 inputs and 2 outputs in the txn
+ * Example where there are 3 inputs and 2 outputs in the txn
  *
  *        Host                       Device
  *
@@ -16,20 +16,15 @@ package btc;
  *                         <= SignTxnMetadataAccepted
  *
  *
- * 1st Input
- * SignTxnInputChunk       =>
- *                         <= SignTxnInputChunkAccepted
- *                        ....
- * SignTxnInputChunk       =>
- *                         <= SignTxnInputChunkAccepted
- *
- * 2nd Input
- * SignTxnInputChunk       =>
- *                         <= SignTxnInputChunkAccepted
- *                        ....
- * SignTxnInputChunk       =>
- *                         <= SignTxnInputChunkAccepted
- *
+ * SignTxnInput            =>
+ *                         <= SignTxnInputAccepted
+ * SignTxnInput            =>
+ *                         <= SignTxnInputAccepted
+ * SignTxnInput            =>
+ *                         <= SignTxnInputAccepted
+ * prevTxnChunk            =>
+ *                         ...
+ *                         <= prevTxnChunkAccepted
  *
  * SignTxnOutput           =>
  *                         <= SignTxnOutputAccepted
@@ -73,16 +68,12 @@ message SignTxnMetadata {
 message SignTxnMetadataAccepted {
 }
 
-message SignTxnInputChunk {
-  common.ChunkPayload chunk_payload = 1;
-}
-
-message SignTxnInputChunkAccepted {
-  common.ChunkAck chunk_ack = 1;
+message SignTxnInputAccepted {
 }
 
 message SignTxnInput {
-  bytes prev_txn = 1;
+  reserved 1;
+  
   bytes prev_txn_hash = 2;
 
   uint32 prev_output_index = 3;
@@ -92,6 +83,14 @@ message SignTxnInput {
 
   uint32 change_index = 7;
   uint32 address_index = 8;
+}
+
+message PrevTxnChunk {
+  common.ChunkPayload chunk_payload = 1;
+}
+
+message PrevTxnChunkAccepted {
+  common.ChunkAck chunk_ack = 1;
 }
 
 message SignTxnOutputAccepted {
@@ -119,12 +118,12 @@ message SignTxnSignatureResponse {
 }
 
 message SignTxnRequest {
-  reserved 3;
 
   oneof request {
     SignTxnInitiateRequest initiate = 1;
     SignTxnMetadata meta = 2;
-    SignTxnInputChunk input = 6;
+    SignTxnInput input = 3;
+    PrevTxnChunk prev_txn_chunk = 6;
     SignTxnOutput output = 4;
     SignTxnSignatureRequest signature = 5;
   }
@@ -136,7 +135,8 @@ message SignTxnResponse {
   oneof response {
     SignTxnConfirmationResponse confirmation = 1;
     SignTxnMetadataAccepted meta_accepted = 2;
-    SignTxnInputChunkAccepted input_accepted = 7;
+    SignTxnInputAccepted input_accepted = 3;
+    PrevTxnChunkAccepted prev_txn_chunk_accepted = 7;
     SignTxnOutputAccepted output_accepted = 4;
     SignTxnSignatureResponse signature = 5;
 
