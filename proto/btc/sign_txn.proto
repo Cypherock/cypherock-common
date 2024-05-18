@@ -6,7 +6,7 @@ import "common.proto";
 package btc;
 
 /**
- * Example where there are 3 inputs and 2 outputs in the txn
+ * Example where there are 2 inputs and 2 outputs in the txn
  *
  *        Host                       Device
  *
@@ -18,8 +18,10 @@ package btc;
  *
  * SignTxnInput            =>
  *                         <= SignTxnInputAccepted
- * SignTxnInput            =>
- *                         <= SignTxnInputAccepted
+ * prevTxnChunk            =>
+ *                         ...
+ *                         <= prevTxnChunkAccepted
+ *
  * SignTxnInput            =>
  *                         <= SignTxnInputAccepted
  * prevTxnChunk            =>
@@ -130,7 +132,6 @@ message SignTxnRequest {
 }
 
 message SignTxnResponse {
-  reserved 3;
   
   oneof response {
     SignTxnConfirmationResponse confirmation = 1;
