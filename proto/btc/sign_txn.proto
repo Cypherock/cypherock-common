@@ -18,15 +18,15 @@ package btc;
  *
  * SignTxnInput            =>
  *                         <= SignTxnInputAccepted
- * prevTxnChunk            =>
+ * PrevTxnChunk            =>
  *                         ...
- *                         <= prevTxnChunkAccepted
+ *                         <= PrevTxnChunkAccepted
  *
  * SignTxnInput            =>
  *                         <= SignTxnInputAccepted
- * prevTxnChunk            =>
+ * PrevTxnChunk            =>
  *                         ...
- *                         <= prevTxnChunkAccepted
+ *                         <= PrevTxnChunkAccepted
  *
  * SignTxnOutput           =>
  *                         <= SignTxnOutputAccepted
