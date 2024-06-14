@@ -32,8 +32,8 @@ enum SignTxnStatus {
 }
 
 message SignTxnInitiateRequest {
-  bytes walletId = 1;
-  repeated uint32 derivationPath = 2;
+  bytes wallet_id = 1;
+  repeated uint32 derivation_path = 2;
   uint32 transaction_size = 3;
 }
 

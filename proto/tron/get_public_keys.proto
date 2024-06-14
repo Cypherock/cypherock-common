@@ -39,7 +39,7 @@ message GetPublicKeysIntiateRequest {
   bytes wallet_id = 1;
 
   /*
-   * address: m/44'/397'/0'/0'/i'
+   * address: m/44'/195'/0'/0/i
    */
   repeated GetPublicKeysDerivationPath derivation_paths = 2;
 }
