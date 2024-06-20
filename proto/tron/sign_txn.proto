@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+import "common.proto";
+import "error.proto";
+
+
+package tron;
+
+/**
+ * Example:
+ *
+ *        Host                       Device
+ *
+ * SignTxnInitiateRequest  => 
+ *                         <= SignTxnConfirmationResponse
+ * SignTxnData             =>
+ *                         <= SignTxnDataAccepted
+ *                        ....
+ * SignTxnData             =>
+ *                         <= SignTxnDataAccepted
+ *
+ * **** Device has all transaction information ****
+ *
+ * SignTxnSignatureRequest =>
+ *                         <= SignTxnSignatureResponse
+ */
+enum SignTxnStatus {
+  SIGN_TXN_STATUS_INIT = 0;
+  SIGN_TXN_STATUS_CONFIRM = 1;
+  SIGN_TXN_STATUS_VERIFY = 2;
+  SIGN_TXN_STATUS_SEED_GENERATED = 3;
+}
+
+message SignTxnInitiateRequest {
+  bytes wallet_id = 1;
+  repeated uint32 derivation_path = 2;
+  uint32 transaction_size = 3;
+}
+
+message SignTxnConfirmationResponse {
+}
+
+message SignTxnData {
+  common.ChunkPayload chunk_payload = 1;
+}
+
+message SignTxnDataAccepted {
+  common.ChunkAck chunk_ack = 1;
+}
+
+message SignTxnSignatureResponse {
+  bytes signature = 1;
+}
+
+message SignTxnSignatureRequest {
+}
+
+message SignTxnRequest {
+  oneof request {
+    SignTxnInitiateRequest initiate = 1;
+    SignTxnData txn_data = 2;
+    SignTxnSignatureRequest signature = 3;
+  }
+}
+
+message SignTxnResponse {
+  oneof response {
+    SignTxnConfirmationResponse confirmation = 1;
+    SignTxnDataAccepted data_accepted = 2;
+    SignTxnSignatureResponse signature = 4;
+
+    error.CommonError common_error = 5;
+  }
+}
