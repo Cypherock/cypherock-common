@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package inheritance;
+
+message GetChallengeRequest {
+    string challenge = 1;
+}
+
+message GetChallengeResponse {
+    bytes public_key = 1;
+}
