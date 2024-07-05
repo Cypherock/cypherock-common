@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "error.proto";
+import "inheritance/wallet_key.proto";
+
+package inheritance;
+
+
+message Query {
+    oneof request{
+        GetChallengeRequest get_challenge = 1;
+    }
+}
+
+message Result {
+    oneof response {
+        GetChallengeResponse get_challenge_response = 1;
+        error.CommonError common_error = 4;
+    }
+}
