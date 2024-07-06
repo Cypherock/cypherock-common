@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package core;
 
+// Session Init
 message SessionIntiateRequest {
 }
 
@@ -11,4 +12,41 @@ message SessionMetadata {
   bytes signature = 3;
   bytes postfix1 = 4;
   bytes postfix2 = 5;
+}
+
+message Response {
+    bytes session_random = 1;
+    uint32 session_age = 2;
+}
+
+message ServerResponse {
+    Response response = 1;
+    bytes signature2 = 2;
+}
+
+message SessionAck {
+    bool session_ack = 1;
+}
+
+// Session Close
+message SessionEnd {
+    bool clear_session = 1;
+}
+
+// Encyption 
+message SessionMessage {
+    bytes message = 1;
+}
+
+message EncyptionMessage {
+    repeated SessionMessage session_message = 1;
+}
+
+message EncryptedPacket {
+    bytes encrpyted_packet = 1;
+}
+
+// Decryption 
+message DecryptedAck {
+    bool decrypt_ack = 1;
 }

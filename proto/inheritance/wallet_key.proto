@@ -10,6 +10,7 @@ package inheritance;
  */
 message GetChallengeRequest {
     string challenge = 1;
+    bytes wallet_id = 2;
 }
 
 message GetChallengeResponse {
