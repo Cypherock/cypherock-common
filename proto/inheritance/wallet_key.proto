@@ -1,11 +1,18 @@
 syntax = "proto3";
 
 package inheritance;
-
+/**
+ * Example of successful get_public_key generation
+ *
+ *        Host                       Device
+ * GetChallengeRequest  =>
+ *                            <= GetChallengeResponse ( publickey if 'Setup', else only signature)
+ */
 message GetChallengeRequest {
     string challenge = 1;
 }
 
 message GetChallengeResponse {
     bytes public_key = 1;
+    bytes signature = 2;
 }

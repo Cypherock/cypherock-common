@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package core;
+
+message SessionIntiateRequest {
+}
+
+message SessionMetadata {
+  bytes device_random_public = 1;
+  bytes device_id = 2;
+  bytes signature = 3;
+  bytes postfix1 = 4;
+  bytes postfix2 = 5;
+}

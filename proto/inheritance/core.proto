@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "error.proto";
 import "inheritance/wallet_key.proto";
+import "session.proto";
 
 package inheritance;
 
@@ -9,12 +10,14 @@ package inheritance;
 message Query {
     oneof request{
         GetChallengeRequest get_challenge = 1;
+        SessionInitiateRequest initiate = 2;
     }
 }
 
 message Result {
     oneof response {
         GetChallengeResponse get_challenge_response = 1;
+        SessionMetadata session_metadata = 2;
         error.CommonError common_error = 4;
     }
 }
