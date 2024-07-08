@@ -2,6 +2,48 @@ syntax = "proto3";
 
 package core;
 
+/**
+ * Example of successful Session Initialisation
+ *
+ *        Host                       Device
+ * SessionIntiateRequest  =>
+ *                        <=   SessionMetadata
+ * SendServerResponse     =>  
+ *                        <=   SessionStartAck
+ * ****        Session Ready to use          ****
+ */
+
+/**
+ * Example of successful Encryption
+ *
+ *        Host                       Device
+ * EncyptionRequest       =>
+ *                      ....
+ * ****  Device has all messages to encrypt  **** 
+ *              
+ *                        <= EncryptionResultResponse
+ */
+
+/**
+ * Example of successful Decryption
+ *
+ *        Host                       Device
+ * DecryptMessageRequest  =>
+ *                        
+ * **** Device shows imp messages on screen  ****
+ *
+ *                        <= DecryptedAck
+ */
+
+/**
+ * Example of successful Session Closing
+ *
+ *        Host                       Device
+ * SessionCloseRequest    =>
+ *
+ * ****  Device erases all session metadata  ****
+ */
+
 // Session Init
 message SessionIntiateRequest {
 }
@@ -14,23 +56,18 @@ message SessionMetadata {
   bytes postfix2 = 5;
 }
 
-message Response {
-    bytes session_random = 1;
+message ServerResponse {
+    bytes session_random_public = 1;
     uint32 session_age = 2;
 }
 
-message ServerResponse {
-    Response response = 1;
+message SendServerResponse {
+    ServerResponse response = 1;
     bytes signature2 = 2;
 }
 
-message SessionAck {
+message SessionStartAck {
     bool session_ack = 1;
-}
-
-// Session Close
-message SessionEnd {
-    bool clear_session = 1;
 }
 
 // Encyption 
@@ -38,15 +75,27 @@ message SessionMessage {
     bytes message = 1;
 }
 
-message EncyptionMessage {
+message EncyptionRequest {
     repeated SessionMessage session_message = 1;
 }
 
 message EncryptedPacket {
-    bytes encrpyted_packet = 1;
+    bytes packet = 1;
+}
+
+message EncryptionResultResponse {
+    EncryptedPacket encrypted_packet = 1;
 }
 
 // Decryption 
+message DecryptMessageRequest {
+    EncryptedPacket encrypted_packet = 1;
+}
+
 message DecryptedAck {
     bool decrypt_ack = 1;
+}
+
+// Session Close
+message SessionCloseRequest {
 }
