@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+import "error.proto";
+
+package inheritance;
+
+message WalletAuthInitiateRequest {
+    string challenge = 1;
+    bytes wallet_id = 2;
+    bool is_publickey = 3;
+}
+
+message WalletAuthResultResponse {
+    bytes public_key = 1;
+    bytes signature = 2;
+}
+
+message WalletAuthRequest {
+    oneof request {
+        WalletAuthInitiateRequest initiate = 1;
+    }
+}
+
+message WalletAuthResponse {
+    oneof response {
+        WalletAuthResultResponse result = 1;
+
+        error.CommonError common_error = 2;
+    }
+}
