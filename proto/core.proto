@@ -66,5 +66,7 @@ message Msg {
     Command cmd = 1;
     ErrorCmd error = 2;
     AppVersionCmd app_version = 3;
+    SessionStartCmd session_start = 4;
+    SessionCloseCmd session_close = 5;
   }
 }

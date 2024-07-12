@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package inheritance;
+/**
+ * Example of successful Encryption
+ *
+ *        Host                       Device
+ * EncryptMessageRequest       =>
+ *                      ....
+ * ****  Device has all messages to encrypt  **** 
+ *              
+ *                        <= EncryptMessageResultResponse
+ */
+
+ // Encyption 
+message SessionMessage {
+    bytes message = 1;
+}
+
+message EncryptMessageRequest {
+    repeated SessionMessage session_message = 1;
+}
+
+message EncryptedPacket {
+    bytes packet = 1;
+}
+
+message EncryptMessageResultResponse {
+    EncryptedPacket encrypted_packet = 1;
+}
+

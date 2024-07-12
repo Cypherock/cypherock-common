@@ -1,54 +1,27 @@
 syntax = "proto3";
 
+import "error.proto";
+
 package core;
 
+
 /**
- * Example of successful Session Initialisation
+ * Example of successful Session Start Flow
  *
  *        Host                       Device
- * SessionIntiateRequest  =>
- *                        <=   SessionMetadata
- * SendServerResponse     =>  
- *                        <=   SessionStartAck
+ * SessionStartIntiateRequest  =>
+ *                        <=   SessionStartIntiateResultResponse
+ * SessionStartBeginRequest     =>  
+ *                        <=   SessionStartAckResponse
  * ****        Session Ready to use          ****
  */
 
-/**
- * Example of successful Encryption
- *
- *        Host                       Device
- * EncyptionRequest       =>
- *                      ....
- * ****  Device has all messages to encrypt  **** 
- *              
- *                        <= EncryptionResultResponse
- */
 
-/**
- * Example of successful Decryption
- *
- *        Host                       Device
- * DecryptMessageRequest  =>
- *                        
- * **** Device shows imp messages on screen  ****
- *
- *                        <= DecryptedAck
- */
-
-/**
- * Example of successful Session Closing
- *
- *        Host                       Device
- * SessionCloseRequest    =>
- *
- * ****  Device erases all session metadata  ****
- */
-
-// Session Init
-message SessionIntiateRequest {
+// Session Start
+message SessionStartIntiateRequest {
 }
 
-message SessionMetadata {
+message SessionStartIntiateResultResponse {
   bytes device_random_public = 1;
   bytes device_id = 2;
   bytes signature = 3;
@@ -61,41 +34,58 @@ message ServerResponse {
     uint32 session_age = 2;
 }
 
-message SendServerResponse {
+message SessionStartBeginRequest {
     ServerResponse response = 1;
     bytes signature2 = 2;
 }
 
-message SessionStartAck {
-    bool session_ack = 1;
+message SessionStartAckResponse {
 }
 
-// Encyption 
-message SessionMessage {
-    bytes message = 1;
+message SessionStartRequest {
+    oneof request {
+        SessionStartIntiateRequest initiate = 1;
+        SessionStartBeginRequest start = 2;
+    }
 }
 
-message EncyptionRequest {
-    repeated SessionMessage session_message = 1;
+message SessionStartResponse {
+    oneof response {
+        SessionStartIntiateResultResponse confirmation = 1;
+        SessionStartAckResponse start_ack = 2;
+
+        error.CommonError common_error = 5;
+    }
 }
 
-message EncryptedPacket {
-    bytes packet = 1;
+message SessionStartCmd {
+    oneof cmd {
+        SessionStartRequest request = 1;
+        SessionStartResponse response = 2;
+    }
 }
 
-message EncryptionResultResponse {
-    EncryptedPacket encrypted_packet = 1;
+/**
+ * Example of successful Session Closing Flow
+ *
+ *        Host                       Device
+ * SessionCloseRequest    =>
+ *
+ * ****  Device erases all session metadata  ****
+ */
+
+ // Session End
+message SessionCloseClearRequest {
 }
 
-// Decryption 
-message DecryptMessageRequest {
-    EncryptedPacket encrypted_packet = 1;
-}
-
-message DecryptedAck {
-    bool decrypt_ack = 1;
-}
-
-// Session Close
 message SessionCloseRequest {
+    oneof request {
+        SessionCloseClearRequest clear = 1;
+    }
+}
+
+message SessionCloseCmd {
+    oneof cmd {
+        SessionCloseRequest request = 1;
+    }
 }

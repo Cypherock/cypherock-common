@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "encryption.proto";
+
+package inheritance;
+/**
+ * Example of successful Decryption Flow
+ *
+ *        Host                       Device
+ * DecryptMessageRequest  =>
+ *                        
+ * **** Device shows imp messages on screen  ****
+ *
+ *                        <= DecryptMessageAckResponse
+ */
+
+
+// Decryption 
+message DecryptMessageRequest {
+    EncryptedPacket encrypted_packet = 1;
+}
+
+message DecryptMessageAckResponse {
+}
