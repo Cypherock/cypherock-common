@@ -51,8 +51,8 @@ message SessionStartRequest {
 
 message SessionStartResponse {
     oneof response {
-        SessionStartIntiateResultResponse confirmation = 1;
-        SessionStartAckResponse start_ack = 2;
+        SessionStartIntiateResultResponse confirmation_initiate = 1;
+        SessionStartAckResponse confirmation_start = 2;
 
         error.CommonError common_error = 5;
     }
