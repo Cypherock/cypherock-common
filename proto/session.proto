@@ -10,14 +10,12 @@ package core;
  *
  *        Host                       Device
  * SessionStartIntiateRequest  =>
- *                        <=   SessionStartIntiateResultResponse
- * SessionStartBeginRequest     =>  
- *                        <=   SessionStartAckResponse
+ *                             <=   SessionStartIntiateResultResponse
+ * SessionStartBeginRequest    =>  
+ *                             <=   SessionStartAckResponse
  * ****        Session Ready to use          ****
  */
 
-
-// Session Start
 message SessionStartIntiateRequest {
 }
 
@@ -29,14 +27,10 @@ message SessionStartIntiateResultResponse {
   bytes postfix2 = 5;
 }
 
-message ServerResponse {
+message SessionStartBeginRequest {
     bytes session_random_public = 1;
     uint32 session_age = 2;
-}
-
-message SessionStartBeginRequest {
-    ServerResponse response = 1;
-    bytes signature2 = 2;
+    bytes signature = 3;
 }
 
 message SessionStartAckResponse {
@@ -69,13 +63,16 @@ message SessionStartCmd {
  * Example of successful Session Closing Flow
  *
  *        Host                       Device
- * SessionCloseRequest    =>
+ * SessionCloseClearRequest  =>
+ *                           <= SessionCloseClearResponse
  *
  * ****  Device erases all session metadata  ****
  */
 
- // Session End
 message SessionCloseClearRequest {
+}
+
+message SessionCloseClearResponse {
 }
 
 message SessionCloseRequest {
@@ -84,8 +81,16 @@ message SessionCloseRequest {
     }
 }
 
+message SessionCloseResponse {
+    oneof response {
+        SessionCloseClearResponse clear = 1;
+        error.CommonError common_error = 2;
+    }
+}
+
 message SessionCloseCmd {
     oneof cmd {
         SessionCloseRequest request = 1;
+        SessionCloseResponse response = 2;
     }
 }

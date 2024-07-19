@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "version.proto";
+import "session.proto";
 
 package core;
 
