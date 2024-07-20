@@ -2,6 +2,8 @@ syntax = "proto3";
 
 import "error.proto";
 import "inheritance/wallet_auth.proto";
+import "inheritance/setup.proto";
+import "inheritance/recovery.proto";
 
 package inheritance;
 
@@ -9,16 +11,16 @@ package inheritance;
 message Query {
     oneof request{
         WalletAuthRequest wallet_auth = 1;
-        EncryptMessageRequest encrypt_data = 2;
-        DecryptMessageRequest decrypt_data = 3;
+        SetupRequest setup = 2;
+        RecoveryRequest recovery = 3;
     }
 }
 
 message Result {
     oneof response {
         WalletAuthResponse wallet_auth = 1;
-        EncryptMessageResponse encrypt_data = 2;
-        DecryptMessageResponse decrypt_data = 3;
+        SetupRespnse setup = 2;
+        RecoveryResponse recovery = 3;
         error.CommonError common_error = 4;
     }
 }

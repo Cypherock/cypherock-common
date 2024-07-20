@@ -7,26 +7,26 @@ package inheritance;
  * Example of successful Decryption Flow
  *
  *        Host                       Device
- * DecryptMessageRequest  =>
+ *       RecoveryRequest  =>
  *                        
  * ****  Device has all messages to encrypt  **** 
  *              
- *                        <= DecryptMessageResponse
+ *                        <= RecoveryResponse
  *
  * **** Send messages on screen  ****
  *
- *                        <= DecryptMessageAckResponse
+ *                        <= RecoveryAckResponse
  */
 
 
 // Decryption 
-message DecryptMessageRequest {
+message RecoveryRequest {
     EncryptedDataPacket encrypted_data_packet = 1;
 }
 
-message DecryptMessageResponse {
+message RecoveryResponse {
     repeated PlainData plain_data = 1;
 }
 
-message DecryptMessageAckResponse {
+message RecoveryAckResponse {
 }

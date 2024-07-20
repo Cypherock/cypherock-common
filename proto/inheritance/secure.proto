@@ -1,7 +1,11 @@
-message SessionMessage {
+syntax = "proto3";
+
+package inheritance;
+
+message PlainData {
     bytes message = 1;
 }
 
-message EncryptedPacket {
+message EncryptedDataPacket {
     bytes packet = 1;
 }

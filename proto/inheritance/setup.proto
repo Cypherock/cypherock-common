@@ -7,19 +7,19 @@ package inheritance;
  * Example of successful Encryption
  *
  *        Host                       Device
- * EncryptMessageRequest       =>
+ *     SetupRequest       =>
  *                      ....
  * ****  Device has all messages to encrypt  **** 
  *              
- *                        <= EncryptMessageResponse
+ *                        <= SetupResponse
  */
 
  // Encyption 
-message EncryptMessageRequest {
+message SetupRequest {
     repeated PlainData plain_data = 1;
 }
 
-message EncryptMessageResponse {
+message SetupResponse {
     EncryptedDataPacket encrypted_data_packet = 1;
 }
 
