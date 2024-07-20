@@ -19,7 +19,7 @@ message Query {
 message Result {
     oneof response {
         WalletAuthResponse wallet_auth = 1;
-        SetupRespnse setup = 2;
+        SetupResponse setup = 2;
         RecoveryResponse recovery = 3;
         error.CommonError common_error = 4;
     }
