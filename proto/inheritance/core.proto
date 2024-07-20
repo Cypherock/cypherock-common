@@ -9,12 +9,16 @@ package inheritance;
 message Query {
     oneof request{
         WalletAuthRequest wallet_auth = 1;
+        EncryptMessageRequest encrypt_data = 2;
+        DecryptMessageRequest decrypt_data = 3;
     }
 }
 
 message Result {
     oneof response {
-        error.CommonError common_error = 1;
-        WalletAuthResponse wallet_auth = 2;
+        WalletAuthResponse wallet_auth = 1;
+        EncryptMessageResponse encrypt_data = 2;
+        DecryptMessageResponse decrypt_data = 3;
+        error.CommonError common_error = 4;
     }
 }

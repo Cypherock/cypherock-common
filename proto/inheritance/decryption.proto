@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "inheritance/encryption.proto";
+import "inheritance/secure.proto";
 
 package inheritance;
 /**
@@ -9,7 +9,11 @@ package inheritance;
  *        Host                       Device
  * DecryptMessageRequest  =>
  *                        
- * **** Device shows imp messages on screen  ****
+ * ****  Device has all messages to encrypt  **** 
+ *              
+ *                        <= DecryptMessageResponse
+ *
+ * **** Send messages on screen  ****
  *
  *                        <= DecryptMessageAckResponse
  */
@@ -17,7 +21,11 @@ package inheritance;
 
 // Decryption 
 message DecryptMessageRequest {
-    EncryptedPacket encrypted_packet = 1;
+    EncryptedDataPacket encrypted_data_packet = 1;
+}
+
+message DecryptMessageResponse {
+    repeated PlainData plain_data = 1;
 }
 
 message DecryptMessageAckResponse {

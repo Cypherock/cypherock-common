@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "inheritance/secure.proto";
+
 package inheritance;
 /**
  * Example of successful Encryption
@@ -9,23 +11,15 @@ package inheritance;
  *                      ....
  * ****  Device has all messages to encrypt  **** 
  *              
- *                        <= EncryptMessageResultResponse
+ *                        <= EncryptMessageResponse
  */
 
  // Encyption 
-message SessionMessage {
-    bytes message = 1;
-}
-
 message EncryptMessageRequest {
-    repeated SessionMessage session_message = 1;
+    repeated PlainData plain_data = 1;
 }
 
-message EncryptedPacket {
-    bytes packet = 1;
-}
-
-message EncryptMessageResultResponse {
-    EncryptedPacket encrypted_packet = 1;
+message EncryptMessageResponse {
+    EncryptedDataPacket encrypted_data_packet = 1;
 }
 

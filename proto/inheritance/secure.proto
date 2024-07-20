@@ -1,0 +1,7 @@
+message SessionMessage {
+    bytes message = 1;
+}
+
+message EncryptedPacket {
+    bytes packet = 1;
+}
