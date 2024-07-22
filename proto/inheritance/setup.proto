@@ -20,6 +20,6 @@ message SetupRequest {
 }
 
 message SetupResponse {
-    EncryptedData encrypted_data_packet = 1;
+    EncryptedData encrypted_data = 1;
 }
 

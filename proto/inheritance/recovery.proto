@@ -21,7 +21,7 @@ package inheritance;
 
 // Decryption 
 message RecoveryRequest {
-    EncryptedDataPacket encrypted_data_packet = 1;
+    EncryptedData encrypted_data = 1;
 }
 
 message RecoveryResponse {
