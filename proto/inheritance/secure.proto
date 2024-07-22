@@ -6,6 +6,6 @@ message PlainData {
     bytes message = 1;
 }
 
-message EncryptedDataPacket {
+message EncryptedData {
     bytes packet = 1;
 }
