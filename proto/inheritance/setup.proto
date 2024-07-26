@@ -17,6 +17,7 @@ package inheritance;
  // Encyption 
 message SetupRequest {
     repeated PlainData plain_data = 1;
+    bytes wallet_id = 2;
 }
 
 message SetupResponse {
