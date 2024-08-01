@@ -4,7 +4,6 @@ package inheritance;
 
 message PlainData {
     bytes message = 1;
-    bool is_private = 2;
 }
 
 message EncryptedData {
