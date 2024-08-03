@@ -6,7 +6,7 @@ package inheritance;
 
 enum WalletAuthStatus {
     WALLET_AUTH_STATUS_INIT = 0;
-    WALLET_AUTH_CARD_TAPPED = 1;
+    WALLET_AUTH_STATUS_CARD_TAPPED = 1;
 }
 
 message WalletAuthInitiateRequest {
