@@ -4,6 +4,11 @@ import "error.proto";
 
 package inheritance;
 
+enum WalletAuthStatus {
+    WALLET_AUTH_STATUS_INIT = 0;
+    WALLET_AUTH_CARD_TAPPED = 1;
+}
+
 message WalletAuthInitiateRequest {
     bytes challenge = 1;
     bytes wallet_id = 2;
