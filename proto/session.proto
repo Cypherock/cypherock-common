@@ -31,6 +31,7 @@ message SessionStartBeginRequest {
     bytes session_random_public = 1;
     uint32 session_age = 2;
     bytes signature = 3;
+    bytes device_id = 4;
 }
 
 message SessionStartAckResponse {
