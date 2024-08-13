@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+import "inheritance/common.proto";
+import "error.proto";
+
+package inheritance;
+/**
+ * Example of successful Decryption Flow
+ *
+ *
+ *            Host                                 Device
+ *
+ *   DecryptDataWithPinRequest    ==>
+ *                                              User confirms
+ *                                                    *
+ *                                         Decrypt all the messages
+ *                                                    *
+ *                                <==     DecryptDataWithPinResponse
+
+ *                                          Display PIN to the user
+ *                                                    *
+ *                                <==     DecryptDataWithPinAckResponse
+ */
+
+enum DecryptDataStatus {
+  DECRYPT_DATA_STATUS_INIT = 0;
+  DECRYPT_DATA_STATUS_USER_CONFIRMED = 1;
+  DECRYPT_DATA_STATUS_MESSAGE_DECRYPTED = 2;
+  DECRYPT_DATA_STATUS_PIN_VERIFIED = 3;
+}
+message DecryptDataWithPinRequest { EncryptedData encrypted_data = 1; }
+
+message DecryptDataWithPinResponse {
+  repeated PlainData plain_data = 1;
+
+  error.CommonError common_error = 2;
+}
+
+message DecryptDataWithPinAckResponse {}

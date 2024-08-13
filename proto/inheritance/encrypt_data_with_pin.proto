@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+import "inheritance/common.proto";
+import "error.proto";
+
+package inheritance;
+/**
+ * Example of successful Encryption
+ *
+ *            Host                                 Device
+ *
+ *   EcryptDataWithPinRequest     ==>
+ *                                              User confirms
+ *                                                    *
+ *                                          Display messages that
+ *                                          needs to be verified
+ *                                                    *
+ *                                          Get pin and card tap to
+ *                                           encrypt the messages
+ *                                                    *
+ *                                <==     EncryptDataWithPinResponse
+ */
+
+enum EncryptDataStatus {
+  ENCRYPT_DATA_STATUS_INIT = 0;
+  ENCRYPT_DATA_STATUS_USER_CONFIRMED = 1;
+  ENCRYPT_DATA_STATUS_MESSAGE_VERIFIED = 2;
+  ENCRYPT_DATA_STATUS_PIN_ENTERED = 3;
+  ENCRYPT_DATA_STATUS_MESSAGE_ENCRYPTED = 4;
+}
+
+message EncryptDataWithPinRequest {
+  bytes wallet_id = 1;
+  repeated PlainData plain_data = 2;
+}
+
+message EncryptDataWithPinResponse {
+  EncryptedData encrypted_data = 1;
+
+  error.CommonError common_error = 2;
+}
