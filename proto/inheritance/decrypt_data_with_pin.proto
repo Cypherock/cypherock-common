@@ -10,16 +10,17 @@ package inheritance;
  *
  *            Host                                 Device
  *
- *   DecryptDataWithPinRequest    ==>
- *                                              User confirms
- *                                                    *
- *                                         Decrypt all the messages
- *                                                    *
- *                                <==     DecryptDataWithPinResponse
+ *   DecryptDataWithPinInitiateRequest    ==>
+ *                                                     User confirms
+ *                                                           *
+ *                                                Decrypt all the messages
+ *                                                           *
+ *                                       <== DecryptDataWithPinMessagesResponse
+ *   DecryptDataWithPinAckRequest    ==>
 
- *                                          Display PIN to the user
- *                                                    *
- *                                <==     DecryptDataWithPinAckResponse
+ *                                                 Display PIN to the user
+ *                                                           *
+ *                                       <==     DecryptDataWithPinAckResponse
  */
 
 enum DecryptDataStatus {
@@ -28,12 +29,27 @@ enum DecryptDataStatus {
   DECRYPT_DATA_STATUS_MESSAGE_DECRYPTED = 2;
   DECRYPT_DATA_STATUS_PIN_VERIFIED = 3;
 }
-message DecryptDataWithPinRequest { EncryptedData encrypted_data = 1; }
 
-message DecryptDataWithPinResponse {
+message DecryptDataWithPinInitiateRequest { EncryptedData encrypted_data = 1; }
+
+message DecryptDataWithPinMessagesResponse {
   repeated PlainData plain_data = 1;
-
-  error.CommonError common_error = 2;
 }
 
+message DecryptDataWithPinRequest {
+  oneof request {
+    DecryptDataWithPinInitiateRequest initiate = 1;
+    DecryptDataWithPinAckRequest ack = 2;
+  }
+}
+
+message DecryptDataWithPinResponse {
+  oneof response {
+    DecryptDataWithPinMessagesResponse messages = 1;
+    DecryptDataWithPinAckResponse ack = 2;
+    error.CommonError common_error = 3;
+  }
+}
+
+message DecryptDataWithPinAckRequest {}
 message DecryptDataWithPinAckResponse {}

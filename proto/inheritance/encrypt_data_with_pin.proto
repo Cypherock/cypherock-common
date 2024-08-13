@@ -7,18 +7,18 @@ package inheritance;
 /**
  * Example of successful Encryption
  *
- *            Host                                 Device
+ *            Host                                          Device
  *
- *   EcryptDataWithPinRequest     ==>
- *                                              User confirms
- *                                                    *
- *                                          Display messages that
- *                                          needs to be verified
- *                                                    *
- *                                          Get pin and card tap to
- *                                           encrypt the messages
- *                                                    *
- *                                <==     EncryptDataWithPinResponse
+ *   EncryptDataWithPinInitiateRequest    ==>
+ *                                                      User confirms
+ *                                                            *
+ *                                                  Display messages that
+ *                                                  needs to be verified
+ *                                                            *
+ *                                                  Get pin and card tap to
+ *                                                   encrypt the messages
+ *                                                            *
+ *                                        <== EncryptDataWithPinResultResponse
  */
 
 enum EncryptDataStatus {
@@ -29,13 +29,20 @@ enum EncryptDataStatus {
   ENCRYPT_DATA_STATUS_MESSAGE_ENCRYPTED = 4;
 }
 
-message EncryptDataWithPinRequest {
+message EncryptDataWithPinInitiateRequest {
   bytes wallet_id = 1;
   repeated PlainData plain_data = 2;
 }
 
-message EncryptDataWithPinResponse {
-  EncryptedData encrypted_data = 1;
+message EncryptDataWithPinResultResponse { EncryptedData encrypted_data = 1; }
 
-  error.CommonError common_error = 2;
+message EncryptDataWithPinRequest {
+  oneof request { EncryptDataWithPinInitiateRequest initiate = 1; }
+}
+
+message EncryptDataWithPinResponse {
+  oneof response {
+    EncryptDataWithPinResultResponse result = 1;
+    error.CommonError common_error = 2;
+  }
 }
