@@ -9,17 +9,17 @@ package inheritance;
 
 message Query {
   oneof request {
-    WalletAuthRequest auth_wallet = 1;
-    SetupRequest encrypt = 2;
-    RecoveryRequest decrypt = 3;
+    AuthWalletRequest auth_wallet = 1;
+    EncryptDataWithPinRequest encrypt = 2;
+    DecryptDataWithPinRequest decrypt = 3;
   }
 }
 
 message Result {
   oneof response {
-    WalletAuthResponse wallet_auth = 1;
-    SetupResponse setup = 2;
-    RecoveryResponse recovery = 3;
+    AuthWalletResponse auth_wallet = 1;
+    EncryptDataWithPinResponse encrypt = 2;
+    DecryptDataWithPinResponse decrypt = 3;
     error.CommonError common_error = 4;
   }
 }

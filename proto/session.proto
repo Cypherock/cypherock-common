@@ -36,7 +36,7 @@ message SessionStartAckResponse {}
 
 message SessionStartRequest {
   oneof request {
-    SessionStartInitateRequest initiate = 1;
+    SessionStartInitiateRequest initiate = 1;
     SessionStartBeginRequest start = 2;
   }
 }
