@@ -34,7 +34,7 @@ message EncryptDataWithPinInitiateRequest {
   repeated PlainData plain_data = 2;
 }
 
-message EncryptDataWithPinResultResponse { EncryptedData encrypted_data = 1; }
+message EncryptDataWithPinResultResponse { bytes encrypted_data = 1; }
 
 message EncryptDataWithPinRequest {
   oneof request { EncryptDataWithPinInitiateRequest initiate = 1; }

@@ -30,11 +30,17 @@ enum DecryptDataStatus {
   DECRYPT_DATA_STATUS_PIN_VERIFIED = 3;
 }
 
-message DecryptDataWithPinInitiateRequest { EncryptedData encrypted_data = 1; }
+message DecryptDataWithPinInitiateRequest {
+  bytes wallet_id = 1;
+  bytes encrypted_data = 2;
+}
 
 message DecryptDataWithPinMessagesResponse {
   repeated PlainData plain_data = 1;
 }
+
+message DecryptDataWithPinAckRequest {}
+message DecryptDataWithPinAckResponse {}
 
 message DecryptDataWithPinRequest {
   oneof request {
@@ -50,6 +56,3 @@ message DecryptDataWithPinResponse {
     error.CommonError common_error = 3;
   }
 }
-
-message DecryptDataWithPinAckRequest {}
-message DecryptDataWithPinAckResponse {}
