@@ -13,6 +13,7 @@ message AuthWalletInitiateRequest {
   bytes challenge = 1;
   bytes wallet_id = 2;
   bool is_public_key = 3;
+  bool is_seed_based = 4;
 }
 
 message AuthWalletResultResponse {
