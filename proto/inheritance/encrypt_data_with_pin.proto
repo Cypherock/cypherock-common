@@ -54,5 +54,6 @@ message EncryptDataWithPinResponse {
   oneof response {
     EncryptDataWithPinResultResponse result = 1;
     error.CommonError common_error = 2;
+    PlainDataChunkAccepted plain_data_chunk_accepted = 3;
   }
 }
