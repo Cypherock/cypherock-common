@@ -6,18 +6,25 @@ package inheritance;
 
 enum AuthWalletStatus {
   AUTH_WALLET_STATUS_INIT = 0;
-  AUTH_WALLET_STATUS_CARD_TAPPED = 1;
+  AUTH_WALLET_STATUS_SEED_BASED_CARD_TAPPED = 1;
+  AUTH_WALLET_STATUS_WALLET_BASED_CARD_TAPPED = 2;
 }
 
 message AuthWalletInitiateRequest {
   bytes challenge = 1;
   bytes wallet_id = 2;
-  bool is_public_key = 3;
+  bool with_public_key = 3;
+  bool do_wallet_based = 4;
+  bool do_seed_based = 5;
+}
+message AuthWalletSignatureAndKey {
+  bytes signature = 1;
+  optional bytes public_key = 2;
 }
 
 message AuthWalletResultResponse {
-  bytes public_key = 1;
-  bytes signature = 2;
+  optional AuthWalletSignatureAndKey wallet_based = 1;
+  optional AuthWalletSignatureAndKey seed_based = 2;
 }
 
 message AuthWalletRequest {
