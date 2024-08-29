@@ -15,9 +15,6 @@ package inheritance;
  *                                                           *
  *                                                Decrypt all the messages
  *                                                           *
- *                                       <== DecryptDataWithPinMessagesResponse
- *   DecryptDataWithPinAckRequest    ==>
-
  *                                                 Display PIN to the user
  *                                                           *
  *                                       <==     DecryptDataWithPinAckResponse
@@ -39,20 +36,13 @@ message DecryptDataWithPinMessagesResponse {
   repeated PlainData plain_data = 1;
 }
 
-message DecryptDataWithPinAckRequest {}
-message DecryptDataWithPinAckResponse {}
-
 message DecryptDataWithPinRequest {
-  oneof request {
-    DecryptDataWithPinInitiateRequest initiate = 1;
-    DecryptDataWithPinAckRequest ack = 2;
-  }
+  oneof request { DecryptDataWithPinInitiateRequest initiate = 1; }
 }
 
 message DecryptDataWithPinResponse {
   oneof response {
     DecryptDataWithPinMessagesResponse messages = 1;
-    DecryptDataWithPinAckResponse ack = 2;
-    error.CommonError common_error = 3;
+    error.CommonError common_error = 2;
   }
 }
