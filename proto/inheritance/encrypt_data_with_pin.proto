@@ -8,18 +8,32 @@ package inheritance;
 /**
  * Example of successful Encryption
  *
- *            Host                                          Device
+ *            Host                                        Device
  *
- *   EncryptDataWithPinInitiateRequest    ==>
- *                                                      User confirms
- *                                                            *
- *                                                  Display messages that
- *                                                  needs to be verified
- *                                                            *
- *                                                  Get pin and card tap to
- *                                                   encrypt the messages
- *                                                            *
- *                                        <== EncryptDataWithPinResultResponse
+ *      InitiateRequest            ==>                      *
+ *                                                   User confirms
+ *
+ *             *                   <==             ConfirmationRequest
+ *
+ *            ------------------data-loop-------------------------
+ *         PlainData               ==>                      *
+ *             *                   <==             PlainDataAccepted
+ *            ------------------loop-end-------------------------
+ *
+ *   EncryptedDataRequest          ==>                      *
+ *                                                Display messages that
+ *                                                needs to be verified
+ *                                                          *
+ *                                                Get pin and card tap to
+ *                                                 encrypt the messages
+ *                                                          *
+ *
+ *            ------------------data-loop-------------------------
+ *             *                   <==                EncryptedData
+ *   EncryptedDataAccepted         ==>                      *
+ *            ------------------loop-end-------------------------
+ *
+ *                                 <==        EncryptedDataCompletedResponse
  */
 
 enum EncryptDataStatus {
@@ -32,29 +46,49 @@ enum EncryptDataStatus {
 
 message EncryptDataWithPinInitiateRequest {
   bytes wallet_id = 1;
-  uint32 plain_data_count = 2;
+  uint32 plain_data_total_size = 2;
 }
+message EncryptDataWithPinConfirmationResponse {}
 
-message PlainDataChunk {
+message EncryptDataWithPinPlainDataStructure { repeated PlainData data = 1; }
+message EncryptDataWithPinPlainData { common.ChunkPayload chunk_payload = 1; }
+message EncryptDataWithPinPlainDataAccepted { common.ChunkAck chunk_ack = 1; }
+
+message EncryptDataWithPinEncryptedDataRequest {}
+
+message EncryptDataWithPinEncryptedDataResponse {
+  uint32 encrypted_data_size = 1;
+}
+message EncryptDataWithPinEncryptedDataConfirmationRequest {}
+
+message EncryptDataWithPinEncryptedDataStructure { bytes encrypted_data = 1; }
+message EncryptDataWithPinEncryptedData {
   common.ChunkPayload chunk_payload = 1;
 }
-
-message PlainDataChunkAccepted {
+message EncryptDataWithPinEncryptedDataAccepted {
   common.ChunkAck chunk_ack = 1;
 }
-message EncryptDataWithPinResultResponse { bytes encrypted_data = 1; }
+
+message EncryptDataWithPinEncryptedDataCompletedResponse {}
 
 message EncryptDataWithPinRequest {
-  oneof request { 
+  oneof request {
     EncryptDataWithPinInitiateRequest initiate = 1;
-    PlainDataChunk plain_data_chunk = 2;
-   }
+    EncryptDataWithPinPlainData plain_data = 2;
+    EncryptDataWithPinEncryptedDataRequest encrypted_data = 3;
+    EncryptDataWithPinEncryptedDataConfirmationRequest confirmation = 4;
+    EncryptDataWithPinEncryptedDataAccepted data_accepted = 5;
+  }
 }
 
 message EncryptDataWithPinResponse {
   oneof response {
-    EncryptDataWithPinResultResponse result = 1;
-    error.CommonError common_error = 2;
-    PlainDataChunkAccepted plain_data_chunk_accepted = 3;
+    EncryptDataWithPinConfirmationResponse confirmation = 1;
+    EncryptDataWithPinPlainDataAccepted data_accepted = 2;
+    EncryptDataWithPinEncryptedDataResponse encrypted_data_initiate = 3;
+    EncryptDataWithPinEncryptedData encrypted_data = 4;
+    EncryptDataWithPinEncryptedDataCompletedResponse completed = 5;
+
+    error.CommonError common_error = 6;
   }
 }
