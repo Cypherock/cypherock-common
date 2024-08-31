@@ -15,10 +15,10 @@ package inheritance;
  *
  *             *                   <==             ConfirmationRequest
  *
- *            ------------------data-loop-------------------------
+ *            -----------------chunk-loop-----------------
  *         PlainData               ==>                      *
  *             *                   <==             PlainDataAccepted
- *            ------------------loop-end-------------------------
+ *            --------------------------------------------
  *
  *   EncryptedDataRequest          ==>                      *
  *                                                Display messages that
@@ -27,13 +27,13 @@ package inheritance;
  *                                                Get pin and card tap to
  *                                                 encrypt the messages
  *                                                          *
- *
- *            ------------------data-loop-------------------------
  *             *                   <==                EncryptedData
- *   EncryptedDataAccepted         ==>                      *
- *            ------------------loop-end-------------------------
  *
- *                                 <==        EncryptedDataCompletedResponse
+ *            -----------------chunk-loop-----------------
+ *   EncryptedDataRequest          ==>                      *
+ *             *                   <==                EncryptedData
+ *            --------------------------------------------
+ *
  */
 
 enum EncryptDataStatus {
@@ -44,40 +44,26 @@ enum EncryptDataStatus {
   ENCRYPT_DATA_STATUS_MESSAGE_ENCRYPTED = 4;
 }
 
-message EncryptDataWithPinInitiateRequest {
-  bytes wallet_id = 1;
-  uint32 plain_data_total_size = 2;
-}
+message EncryptDataWithPinInitiateRequest { bytes wallet_id = 1; }
 message EncryptDataWithPinConfirmationResponse {}
 
 message EncryptDataWithPinPlainDataStructure { repeated PlainData data = 1; }
 message EncryptDataWithPinPlainData { common.ChunkPayload chunk_payload = 1; }
 message EncryptDataWithPinPlainDataAccepted { common.ChunkAck chunk_ack = 1; }
 
-message EncryptDataWithPinEncryptedDataRequest {}
-
-message EncryptDataWithPinEncryptedDataResponse {
-  uint32 encrypted_data_size = 1;
-}
-message EncryptDataWithPinEncryptedDataConfirmationRequest {}
-
 message EncryptDataWithPinEncryptedDataStructure { bytes encrypted_data = 1; }
+message EncryptDataWithPinEncryptedDataRequest {
+  common.ChunkAck chunk_ack = 1;
+}
 message EncryptDataWithPinEncryptedData {
   common.ChunkPayload chunk_payload = 1;
 }
-message EncryptDataWithPinEncryptedDataAccepted {
-  common.ChunkAck chunk_ack = 1;
-}
-
-message EncryptDataWithPinEncryptedDataCompletedResponse {}
 
 message EncryptDataWithPinRequest {
   oneof request {
     EncryptDataWithPinInitiateRequest initiate = 1;
     EncryptDataWithPinPlainData plain_data = 2;
-    EncryptDataWithPinEncryptedDataRequest encrypted_data = 3;
-    EncryptDataWithPinEncryptedDataConfirmationRequest confirmation = 4;
-    EncryptDataWithPinEncryptedDataAccepted data_accepted = 5;
+    EncryptDataWithPinEncryptedDataRequest encrypted_data_request = 3;
   }
 }
 
@@ -85,10 +71,8 @@ message EncryptDataWithPinResponse {
   oneof response {
     EncryptDataWithPinConfirmationResponse confirmation = 1;
     EncryptDataWithPinPlainDataAccepted data_accepted = 2;
-    EncryptDataWithPinEncryptedDataResponse encrypted_data_initiate = 3;
-    EncryptDataWithPinEncryptedData encrypted_data = 4;
-    EncryptDataWithPinEncryptedDataCompletedResponse completed = 5;
+    EncryptDataWithPinEncryptedData encrypted_data = 3;
 
-    error.CommonError common_error = 6;
+    error.CommonError common_error = 4;
   }
 }
