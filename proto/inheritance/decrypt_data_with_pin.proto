@@ -2,22 +2,35 @@ syntax = "proto3";
 
 import "inheritance/common.proto";
 import "error.proto";
+import "common.proto";
 
 package inheritance;
 /**
  * Example of successful Decryption Flow
  *
+ *            Host                                        Device
  *
- *            Host                                 Device
+ *      InitiateRequest            ==>                      *
+ *                                                   User confirms
  *
- *   DecryptDataWithPinInitiateRequest    ==>
- *                                                     User confirms
- *                                                           *
+ *             *                   <==             ConfirmationRequest
+ *
+ *            -----------------chunk-loop-----------------
+ *         EncryptedData           ==>                      *
+ *             *                   <==             EncryptedDataAccepted
+ *            --------------------------------------------
+ *
+ *   DecryptedDataRequest          ==>                      *
  *                                                Decrypt all the messages
- *                                                           *
- *                                                 Display PIN to the user
- *                                                           *
- *                                       <==     DecryptDataWithPinAckResponse
+ *                                                          *
+ *                                                Display PIN to the user
+ *                                                          *
+ *             *                   <==                DecryptedData
+ *
+ *            -----------------chunk-loop-----------------
+ *   DecryptedDataRequest          ==>                      *
+ *             *                   <==                DecryptedData
+ *            --------------------------------------------
  */
 
 enum DecryptDataStatus {
@@ -27,22 +40,41 @@ enum DecryptDataStatus {
   DECRYPT_DATA_STATUS_PIN_VERIFIED = 3;
 }
 
-message DecryptDataWithPinInitiateRequest {
-  bytes wallet_id = 1;
-  bytes encrypted_data = 2;
+message DecryptDataWithPinInitiateRequest { bytes wallet_id = 1; }
+message DecryptDataWithPinConfirmationResponse {}
+
+message DecryptDataWithPinEncryptedDataStructure { bytes encrypted_data = 1; }
+
+message DecryptDataWithPinEncryptedData {
+  common.ChunkPayload chunk_payload = 1;
 }
 
-message DecryptDataWithPinMessagesResponse {
+message DecryptDataWithPinEncryptedDataAccepted {
+  common.ChunkAck chunk_ack = 1;
+}
+
+message DecryptDataWithPinPlainDataStructure {
   repeated PlainData plain_data = 1;
 }
 
+message DecryptDataWithPinPlainDataRequest { common.ChunkAck chunk_ack = 1; }
+
+message DecryptDataWithPinPlainData { common.ChunkPayload chunk_payload = 1; }
+
 message DecryptDataWithPinRequest {
-  oneof request { DecryptDataWithPinInitiateRequest initiate = 1; }
+  oneof request {
+    DecryptDataWithPinInitiateRequest initiate = 1;
+    DecryptDataWithPinEncryptedData encrypted_data = 2;
+    DecryptDataWithPinPlainDataRequest plain_data_request = 3;
+  }
 }
 
 message DecryptDataWithPinResponse {
   oneof response {
-    DecryptDataWithPinMessagesResponse messages = 1;
-    error.CommonError common_error = 2;
+    DecryptDataWithPinConfirmationResponse confirmation = 1;
+    DecryptDataWithPinEncryptedDataAccepted data_accepted = 2;
+    DecryptDataWithPinPlainData plain_data = 3;
+
+    error.CommonError common_error = 4;
   }
 }
