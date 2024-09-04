@@ -43,7 +43,7 @@ enum DecryptDataStatus {
 message DecryptDataWithPinInitiateRequest { bytes wallet_id = 1; }
 message DecryptDataWithPinConfirmationResponse {}
 
-message DecryptDataWithPinEncryptedDataStructure { bytes encrypted_data = 1; }
+message DecryptDataWithPinEncryptedDataStructure { bytes data = 1; }
 
 message DecryptDataWithPinEncryptedData {
   common.ChunkPayload chunk_payload = 1;
