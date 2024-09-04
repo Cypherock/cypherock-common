@@ -65,7 +65,7 @@ message DecryptDataWithPinRequest {
   oneof request {
     DecryptDataWithPinInitiateRequest initiate = 1;
     DecryptDataWithPinEncryptedData encrypted_data = 2;
-    DecryptDataWithPinDecryptedDataRequest decrypted_request = 3;
+    DecryptDataWithPinDecryptedDataRequest decrypted_data_request = 3;
   }
 }
 
