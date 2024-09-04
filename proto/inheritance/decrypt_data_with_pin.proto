@@ -53,19 +53,19 @@ message DecryptDataWithPinEncryptedDataAccepted {
   common.ChunkAck chunk_ack = 1;
 }
 
-message DecryptDataWithPinPlainDataStructure {
-  repeated PlainData plain_data = 1;
+message DecryptDataWithPinDecryptedDataStructure {
+  repeated PlainData decrypted_data = 1;
 }
 
-message DecryptDataWithPinPlainDataRequest { common.ChunkAck chunk_ack = 1; }
+message DecryptDataWithPinDecryptedDataRequest { common.ChunkAck chunk_ack = 1; }
 
-message DecryptDataWithPinPlainData { common.ChunkPayload chunk_payload = 1; }
+message DecryptDataWithPinDecryptedData { common.ChunkPayload chunk_payload = 1; }
 
 message DecryptDataWithPinRequest {
   oneof request {
     DecryptDataWithPinInitiateRequest initiate = 1;
     DecryptDataWithPinEncryptedData encrypted_data = 2;
-    DecryptDataWithPinPlainDataRequest plain_data_request = 3;
+    DecryptDataWithPinDecryptedDataRequest decrypted_request = 3;
   }
 }
 
@@ -73,7 +73,7 @@ message DecryptDataWithPinResponse {
   oneof response {
     DecryptDataWithPinConfirmationResponse confirmation = 1;
     DecryptDataWithPinEncryptedDataAccepted data_accepted = 2;
-    DecryptDataWithPinPlainData plain_data = 3;
+    DecryptDataWithPinDecryptedData decrypted_data = 3;
 
     error.CommonError common_error = 4;
   }
