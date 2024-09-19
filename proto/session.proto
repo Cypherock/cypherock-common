@@ -15,7 +15,8 @@ package core;
  * ****        Session Ready to use          ****
  */
 
-message SessionStartInitiateRequest {}
+message SessionStartInitiateRequest {
+}
 
 message SessionStartInitiateResultResponse {
   bytes device_random_public = 1;
@@ -23,6 +24,7 @@ message SessionStartInitiateResultResponse {
   bytes signature = 3;
   bytes postfix1 = 4;
   bytes postfix2 = 5;
+  uint32 key_index = 6;
 }
 
 message SessionStartBeginRequest {
@@ -32,7 +34,8 @@ message SessionStartBeginRequest {
   bytes device_id = 4;
 }
 
-message SessionStartAckResponse {}
+message SessionStartAckResponse {
+}
 
 message SessionStartRequest {
   oneof request {
@@ -67,12 +70,16 @@ message SessionStartCmd {
  * ****  Device erases all session metadata  ****
  */
 
-message SessionCloseClearRequest {}
+message SessionCloseClearRequest {
+}
 
-message SessionCloseClearResponse {}
+message SessionCloseClearResponse {
+}
 
 message SessionCloseRequest {
-  oneof request { SessionCloseClearRequest clear = 1; }
+  oneof request {
+    SessionCloseClearRequest clear = 1;
+  }
 }
 
 message SessionCloseResponse {
