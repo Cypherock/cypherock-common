@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "error.proto";
+
+package xrp;
+
+// TODO: Define the flow of get pubkey request-response cycle
+
+enum GetPublicKeysStatus {
+  GET_PUBLIC_KEYS_STATUS_INIT = 0;
+  GET_PUBLIC_KEYS_STATUS_CONFIRM = 1;
+  GET_PUBLIC_KEYS_STATUS_SEED_GENERATED = 2;
+  GET_PUBLIC_KEYS_STATUS_VERIFY = 3;
+}
+
+
+message GetPublicKeysRequest {
+  // TODO: Define request(s)
+}
+
+message GetPublicKeysResponse {
+  oneof response {
+    // TODO: Define responses(s)
+    
+    error.CommonError common_error = 2;
+  }
+}

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "error.proto";
+
+package xrp;
+
+// TODO: Define the flow of sign txn request-response cycle
+
+enum SignTxnStatus {
+  SIGN_TXN_STATUS_INIT = 0;
+  SIGN_TXN_STATUS_CONFIRM = 1;
+  SIGN_TXN_STATUS_VERIFY = 2;
+  SIGN_TXN_STATUS_SEED_GENERATED = 3;
+}
+
+
+message SignTxnRequest {
+  // TODO: Define request(s)
+}
+
+message SignTxnResponse {
+  oneof response {
+    // TODO: Define responses(s)
+    
+    error.CommonError common_error = 2;
+  }
+}
