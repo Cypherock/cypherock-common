@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+import "error.proto";
+
+package starknet;
+
+/**
+ *        Host                       Device
+ *
+ * SignTxnInitiateRequest  => 
+ *                         <= SignTxnConfirmationResponse
+ *
+ * SignTxnUnsignedTxn      =>
+ *                         <= SignTxnUnsignedTxnAccepted
+ *
+ * **** Device has all transaction information ****
+ *
+ *
+ * SignTxnSignatureRequest =>
+ *                         <= SignTxnSignatureResponse
+ */
+
+enum SignTxnStatus {
+  SIGN_TXN_STATUS_INIT = 0;
+  SIGN_TXN_STATUS_CONFIRM = 1;
+  SIGN_TXN_STATUS_VERIFY = 2;
+  SIGN_TXN_STATUS_SEED_GENERATED = 3;
+}
+
+message SignTxnInitiateRequest {
+  bytes wallet_id = 1;
+  repeated uint32 derivation_path = 2;
+}
+
+message SignTxnUnsignedTxn {
+  bytes txn = 1;
+}
+
+message SignTxnSignatureRequest {
+}
+
+message SignTxnConfirmationResponse {
+}
+
+message SignTxnUnsignedTxnAccepted {
+}
+
+message SignTxnSignatureResponse {
+  bytes signature = 1;
+}
+
+message SignTxnRequest {
+  oneof request {
+    SignTxnInitiateRequest initiate = 1;
+    SignTxnUnsignedTxn txn = 2;
+    SignTxnSignatureRequest signature = 3;
+  }
+}
+
+message SignTxnResponse {
+  oneof response {
+    SignTxnConfirmationResponse confirmation = 1;
+    SignTxnSignatureResponse signature = 2;
+    SignTxnUnsignedTxnAccepted unsigned_txn_accepted = 3;
+    error.CommonError common_error = 4;
+  }
+}
