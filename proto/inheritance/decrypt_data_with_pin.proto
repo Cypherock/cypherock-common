@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+import "inheritance/common.proto";
+import "error.proto";
+import "common.proto";
+
+package inheritance;
+/**
+ * Example of successful Decryption Flow
+ *
+ *            Host                                        Device
+ *
+ *      InitiateRequest            ==>                      *
+ *                                                   User confirms
+ *
+ *             *                   <==             ConfirmationRequest
+ *
+ *            -----------------chunk-loop-----------------
+ *         EncryptedData           ==>                      *
+ *             *                   <==             EncryptedDataAccepted
+ *            --------------------------------------------
+ *
+ *   DecryptedDataRequest          ==>                      *
+ *                                                Decrypt all the messages
+ *                                                          *
+ *                                                Display PIN to the user
+ *                                                          *
+ *             *                   <==                DecryptedData
+ *
+ *            -----------------chunk-loop-----------------
+ *   DecryptedDataRequest          ==>                      *
+ *             *                   <==                DecryptedData
+ *            --------------------------------------------
+ */
+
+enum DecryptDataStatus {
+  DECRYPT_DATA_STATUS_INIT = 0;
+  DECRYPT_DATA_STATUS_USER_CONFIRMED = 1;
+  DECRYPT_DATA_STATUS_MESSAGE_DECRYPTED = 2;
+  DECRYPT_DATA_STATUS_PIN_VERIFIED = 3;
+}
+
+message DecryptDataWithPinInitiateRequest { bytes wallet_id = 1; }
+message DecryptDataWithPinConfirmationResponse {}
+
+message DecryptDataWithPinEncryptedDataStructure { bytes data = 1; }
+
+message DecryptDataWithPinEncryptedData {
+  common.ChunkPayload chunk_payload = 1;
+}
+
+message DecryptDataWithPinEncryptedDataAccepted {
+  common.ChunkAck chunk_ack = 1;
+}
+
+message DecryptDataWithPinDecryptedDataStructure {
+  repeated PlainData decrypted_data = 1;
+}
+
+message DecryptDataWithPinDecryptedDataRequest { common.ChunkAck chunk_ack = 1; }
+
+message DecryptDataWithPinDecryptedData { common.ChunkPayload chunk_payload = 1; }
+
+message DecryptDataWithPinRequest {
+  oneof request {
+    DecryptDataWithPinInitiateRequest initiate = 1;
+    DecryptDataWithPinEncryptedData encrypted_data = 2;
+    DecryptDataWithPinDecryptedDataRequest decrypted_data_request = 3;
+  }
+}
+
+message DecryptDataWithPinResponse {
+  oneof response {
+    DecryptDataWithPinConfirmationResponse confirmation = 1;
+    DecryptDataWithPinEncryptedDataAccepted data_accepted = 2;
+    DecryptDataWithPinDecryptedData decrypted_data = 3;
+
+    error.CommonError common_error = 4;
+  }
+}

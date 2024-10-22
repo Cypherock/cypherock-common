@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package inheritance;
+
+message PlainData {
+  bytes message = 1;
+  optional bool is_verified_on_device = 2;
+  uint32 tag = 3;
+}
