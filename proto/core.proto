@@ -39,6 +39,8 @@ enum ErrorType {
   APP_NOT_ACTIVE = 3;
   /** Timeout occured during an app */
   APP_TIMEOUT_OCCURRED = 4;
+  /** Session invalid/establishment fail */
+  DEVICE_SESSION_INVALID = 5; 
 };
 
 message ErrorCmd {
