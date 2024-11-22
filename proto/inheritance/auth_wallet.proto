@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+import "error.proto";
+
+package inheritance;
+
+enum AuthWalletStatus {
+  AUTH_WALLET_STATUS_INIT = 0;
+  AUTH_WALLET_STATUS_USER_CONFIRMED = 1;
+  AUTH_WALLET_STATUS_SEED_BASED_CARD_TAPPED = 2;
+  AUTH_WALLET_STATUS_PAIRING_CARD_TAPPED = 3;
+  AUTH_WALLET_STATUS_WALLET_BASED_CARD_TAPPED = 4;
+}
+
+message AuthWalletInitiateRequest {
+  bytes challenge = 1;
+  bytes wallet_id = 2;
+  bool with_public_key = 3;
+  bool do_wallet_based = 4;
+  bool do_seed_based = 5;
+}
+message AuthWalletSignatureAndKey {
+  bytes signature = 1;
+  optional bytes public_key = 2;
+}
+
+message AuthWalletResultResponse {
+  optional AuthWalletSignatureAndKey wallet_based = 1;
+  optional AuthWalletSignatureAndKey seed_based = 2;
+}
+
+message AuthWalletRequest {
+  oneof request { AuthWalletInitiateRequest initiate = 1; }
+}
+
+message AuthWalletResponse {
+  oneof response {
+    AuthWalletResultResponse result = 1;
+
+    error.CommonError common_error = 2;
+  }
+}

@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+import "inheritance/common.proto";
+import "error.proto";
+import "common.proto";
+
+package inheritance;
+/**
+ * Example of successful Encryption
+ *
+ *            Host                                        Device
+ *
+ *      InitiateRequest            ==>                      *
+ *                                                   User confirms
+ *
+ *             *                   <==             ConfirmationRequest
+ *
+ *            -----------------chunk-loop-----------------
+ *         PlainData               ==>                      *
+ *             *                   <==             PlainDataAccepted
+ *            --------------------------------------------
+ *
+ *   EncryptedDataRequest          ==>                      *
+ *                                                Display messages that
+ *                                                needs to be verified
+ *                                                          *
+ *                                                Get pin and card tap to
+ *                                                 encrypt the messages
+ *                                                          *
+ *             *                   <==                EncryptedData
+ *
+ *            -----------------chunk-loop-----------------
+ *   EncryptedDataRequest          ==>                      *
+ *             *                   <==                EncryptedData
+ *            --------------------------------------------
+ *
+ */
+
+enum EncryptDataStatus {
+  ENCRYPT_DATA_STATUS_INIT = 0;
+  ENCRYPT_DATA_STATUS_USER_CONFIRMED = 1;
+  ENCRYPT_DATA_STATUS_MESSAGE_VERIFIED = 2;
+  ENCRYPT_DATA_STATUS_PIN_ENTERED = 3;
+  ENCRYPT_DATA_STATUS_MESSAGE_ENCRYPTED = 4;
+}
+
+message EncryptDataWithPinInitiateRequest { bytes wallet_id = 1; }
+message EncryptDataWithPinConfirmationResponse {}
+
+message EncryptDataWithPinPlainDataStructure { repeated PlainData data = 1; }
+message EncryptDataWithPinPlainData { common.ChunkPayload chunk_payload = 1; }
+message EncryptDataWithPinPlainDataAccepted { common.ChunkAck chunk_ack = 1; }
+
+message EncryptDataWithPinEncryptedDataStructure { bytes encrypted_data = 1; }
+message EncryptDataWithPinEncryptedDataRequest {
+  common.ChunkAck chunk_ack = 1;
+}
+message EncryptDataWithPinEncryptedData {
+  common.ChunkPayload chunk_payload = 1;
+}
+
+message EncryptDataWithPinRequest {
+  oneof request {
+    EncryptDataWithPinInitiateRequest initiate = 1;
+    EncryptDataWithPinPlainData plain_data = 2;
+    EncryptDataWithPinEncryptedDataRequest encrypted_data_request = 3;
+  }
+}
+
+message EncryptDataWithPinResponse {
+  oneof response {
+    EncryptDataWithPinConfirmationResponse confirmation = 1;
+    EncryptDataWithPinPlainDataAccepted data_accepted = 2;
+    EncryptDataWithPinEncryptedData encrypted_data = 3;
+
+    error.CommonError common_error = 4;
+  }
+}

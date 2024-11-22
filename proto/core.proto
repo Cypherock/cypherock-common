@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "version.proto";
+import "session.proto";
 
 package core;
 
@@ -38,6 +39,8 @@ enum ErrorType {
   APP_NOT_ACTIVE = 3;
   /** Timeout occured during an app */
   APP_TIMEOUT_OCCURRED = 4;
+  /** Session invalid/establishment fail */
+  DEVICE_SESSION_INVALID = 5; 
 };
 
 message ErrorCmd {
@@ -66,5 +69,7 @@ message Msg {
     Command cmd = 1;
     ErrorCmd error = 2;
     AppVersionCmd app_version = 3;
+    SessionStartCmd session_start = 4;
+    SessionCloseCmd session_close = 5;
   }
 }

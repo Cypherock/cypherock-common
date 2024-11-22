@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "error.proto";
+import "inheritance/auth_wallet.proto";
+import "inheritance/encrypt_data_with_pin.proto";
+import "inheritance/decrypt_data_with_pin.proto";
+
+package inheritance;
+
+message Query {
+  oneof request {
+    AuthWalletRequest auth_wallet = 1;
+    EncryptDataWithPinRequest encrypt = 2;
+    DecryptDataWithPinRequest decrypt = 3;
+  }
+}
+
+message Result {
+  oneof response {
+    AuthWalletResponse auth_wallet = 1;
+    EncryptDataWithPinResponse encrypt = 2;
+    DecryptDataWithPinResponse decrypt = 3;
+    error.CommonError common_error = 4;
+  }
+}
