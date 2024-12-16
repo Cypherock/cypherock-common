@@ -50,12 +50,12 @@ message SignTxnInvokeTxn {
   CompiledCallData calldata = 3;
   bytes chain_id = 4;
   bytes nonce = 5;
-  bytes account_deployment_data = 6;
+  repeated bytes account_deployment_data = 6;
   bytes nonce_data_availability_mode = 7;
   bytes fee_data_availability_mode = 8;
   ResourceBounds resource_bound = 9;
   bytes tip = 10;
-  bytes paymaster_data = 11;
+  repeated bytes paymaster_data = 11;
 }
 
 message SignTxnDeployAccountTxn {
@@ -70,7 +70,7 @@ message SignTxnDeployAccountTxn {
   bytes fee_data_availability_mode = 9;
   ResourceBounds resource_bounds = 10;
   bytes tip = 11;
-  bytes paymaster_data = 12;
+  repeated bytes paymaster_data = 12;
 }
 
 message SignTxnUnsignedTxn {
