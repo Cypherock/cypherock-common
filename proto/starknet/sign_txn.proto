@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+import "error.proto";
+
+package starknet;
+
+/**
+ *        Host                       Device
+ *
+ * SignTxnInitiateRequest  =>
+ *                         <= SignTxnConfirmationResponse
+ *
+ * SignTxnUnsignedTxn      =>
+ *                         <= SignTxnUnsignedTxnAccepted
+ *
+ * **** Device has all transaction information ****
+ *
+ *
+ * SignTxnSignatureRequest =>
+ *                         <= SignTxnSignatureResponse
+ */
+
+enum SignTxnStatus {
+  SIGN_TXN_STATUS_INIT = 0;
+  SIGN_TXN_STATUS_CONFIRM = 1;
+  SIGN_TXN_STATUS_VERIFY = 2;
+  SIGN_TXN_STATUS_SEED_GENERATED = 3;
+}
+
+message SignTxnInitiateRequest {
+  bytes wallet_id = 1;
+  repeated uint32 derivation_path = 2;
+}
+
+message CompiledCallData { repeated bytes value = 1; }
+
+message GasAmount {
+  bytes max_amount = 1;
+  bytes max_price_per_unit = 2;
+}
+
+message ResourceBounds {
+  GasAmount level_1 = 1;
+  GasAmount level_2 = 2;
+}
+
+message SignTxnInvokeTxn {
+  bytes sender_address = 1;
+  bytes version = 2;
+  CompiledCallData calldata = 3;
+  bytes chain_id = 4;
+  bytes nonce = 5;
+  repeated bytes account_deployment_data = 6;
+  bytes nonce_data_availability_mode = 7;
+  bytes fee_data_availability_mode = 8;
+  ResourceBounds resource_bound = 9;
+  bytes tip = 10;
+  repeated bytes paymaster_data = 11;
+}
+
+message SignTxnDeployAccountTxn {
+  bytes contract_address = 1;
+  bytes class_hash = 2;
+  CompiledCallData constructor_call_data = 3;
+  bytes salt = 4;
+  bytes version = 5;
+  bytes chain_id = 6;
+  bytes nonce = 7;
+  bytes nonce_data_availability_mode = 8;
+  bytes fee_data_availability_mode = 9;
+  ResourceBounds resource_bounds = 10;
+  bytes tip = 11;
+  repeated bytes paymaster_data = 12;
+}
+
+message SignTxnUnsignedTxn {
+  oneof type {
+    SignTxnInvokeTxn invoke_txn = 1;
+    SignTxnDeployAccountTxn deploy_txn = 2;
+  }
+}
+
+message SignTxnSignatureRequest {}
+
+message SignTxnConfirmationResponse {}
+
+message SignTxnUnsignedTxnAccepted {}
+
+message SignTxnSignatureResponse { bytes signature = 1; }
+
+message SignTxnRequest {
+  oneof request {
+    SignTxnInitiateRequest initiate = 1;
+    SignTxnUnsignedTxn txn = 2;
+    SignTxnSignatureRequest signature = 3;
+  }
+}
+
+message SignTxnResponse {
+  oneof response {
+    SignTxnConfirmationResponse confirmation = 1;
+    SignTxnSignatureResponse signature = 2;
+    SignTxnUnsignedTxnAccepted unsigned_txn_accepted = 3;
+    error.CommonError common_error = 4;
+  }
+}
