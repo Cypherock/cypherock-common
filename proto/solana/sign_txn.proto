@@ -38,6 +38,8 @@ message SignTxnInitiateRequest {
   bytes walletId = 1;
   repeated uint32 derivationPath = 2;
   uint32 transaction_size = 3;
+  bool is_token_transfer_txn = 4;
+  bytes reciever_address = 5;
 }
 
 message SignTxnConfirmationResponse {
