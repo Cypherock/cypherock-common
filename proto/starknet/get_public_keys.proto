@@ -37,10 +37,6 @@ message GetPublicKeysDerivationPath {
 
 message GetPublicKeysIntiateRequest {
   bytes wallet_id = 1;
-
-  /*
-   * address: m/44'/9004'/0'/0/0
-   */
   repeated GetPublicKeysDerivationPath derivation_paths = 2;
 }
 
