@@ -33,11 +33,16 @@ enum SignTxnStatus {
   SIGN_TXN_STATUS_VERIFY = 2;
   SIGN_TXN_STATUS_SEED_GENERATED = 3;
 }
+message SignTxnInitiateTokenData {
+  bytes recipient_address = 1;
+  bytes mint_address = 2;
+}
 
 message SignTxnInitiateRequest {
   bytes walletId = 1;
   repeated uint32 derivationPath = 2;
   uint32 transaction_size = 3;
+  SignTxnInitiateTokenData token_data = 4;
 }
 
 message SignTxnConfirmationResponse {
