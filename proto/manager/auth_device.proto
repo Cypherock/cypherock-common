@@ -26,6 +26,18 @@ package manager;
  *                            <= AuthDeviceFlowCompletion
  */
 
+/**
+ * Example of error in authentication
+ *
+ *        Host                       Device
+ * AuthDeviceInitiateRequest  => 
+ *                            <= AuthDeviceChallengeSigResponse
+ * ------------------------------------------------
+ *                            <= AuthDeviceSerialSigResponse
+ * AuthDeviceResult           =>
+ *                            <= AuthDeviceChallengeSigResponse
+ */
+
 enum AuthDeviceStatus {
   AUTH_DEVICE_STATUS_INIT = 0;
   AUTH_DEVICE_STATUS_USER_CONFIRMED = 1;
@@ -65,6 +77,16 @@ message AuthDeviceRequest {
   }
 }
 
+enum AuthDeviceErrorType {
+  AUTH_DEVICE_ERROR_TYPE_NONE = 0;
+  ATECC_RETRIES_EXCEEDED = 1;
+  SIGNATURE_VERIFICATION_FAILED = 2;
+}
+
+message AuthDeviceErrorResponse {
+  AuthDeviceErrorType type = 1;
+}
+
 message AuthDeviceCompletion {
 }
 
@@ -73,6 +95,7 @@ message AuthDeviceResponse {
     AuthDeviceSerialSigResponse serial_signature = 1;
     AuthDeviceChallengeSigResponse challenge_signature = 2;
     AuthDeviceCompletion flow_complete = 4;
+    AuthDeviceErrorResponse error = 5;
     
     error.CommonError common_error = 3;
   }
