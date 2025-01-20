@@ -35,7 +35,6 @@ enum SignTxnStatus {
 }
 message SignTxnInitiateTokenData {
   bytes recipient_address = 1;
-  bytes mint_address = 2;
 }
 
 message SignTxnInitiateRequest {
