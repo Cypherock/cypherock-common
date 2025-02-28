@@ -55,7 +55,8 @@ message SignTxnDataAccepted {
 }
 
 message SignTxnSignatureResponse {
-  bytes signature = 1;
+  bytes transfer_req_signature = 1;
+  bytes read_state_req_signature = 2;
 }
 
 message SignTxnSignatureRequest {
