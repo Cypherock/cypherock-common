@@ -1,5 +1,8 @@
 syntax = "proto3";
 
+import "constellation/get_public_key.proto";
+import "constellation/sign_txn.proto";
+
 import "error.proto";
 
 package constellation;
