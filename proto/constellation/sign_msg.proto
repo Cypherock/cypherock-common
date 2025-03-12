@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+import "common.proto";
+import "error.proto";
+
+package constellation;
+
+/**
+ * Example:
+ *
+ *        Host                       Device
+ *
+ * SignMsgInitiateRequest  => 
+ *                         <= SignMsgConfirmationResponse
+ * SignMsgData             =>
+ *                         <= SignMsgDataAccepted
+ *                        ....
+ * SignMsgData             =>
+ *                         <= SignMsgDataAccepted
+ *
+ * **** Device has complete message ****
+ *
+ * SignMsgSignatureRequest =>
+ *                         <= SignMsgSignatureResponse
+ */
+enum SignMsgStatus {
+  SIGN_MSG_STATUS_INIT = 0;
+  SIGN_MSG_STATUS_CONFIRM = 1;
+  SIGN_MSG_STATUS_VERIFY = 2;
+  SIGN_MSG_STATUS_SEED_GENERATED = 3;
+}
+
+enum SignMsgType {
+  SIGN_MSG_TYPE_SIGN_TYPED_MSG = 0;
+  SIGN_MSG_TYPE_SIGN_ARBITRARY_DATA = 1;
+  SIGN_MSG_TYPE_BLIND_SIGN = 2;
+}
+
+message SignMsgInitiateRequest {
+  bytes wallet_id = 1;
+  repeated uint32 derivation_path = 2;
+  uint32 message_size = 3;
+  SignMsgType message_type = 4;
+}
+
+message SignMsgConfirmationResponse {}
+
+message SignMsgData {
+  common.ChunkPayload chunk_payload = 1;
+}
+
+message SignMsgDataAccepted {
+  common.ChunkAck chunk_ack = 1;
+}
+
+message SignMsgSignatureResponse {
+  bytes signature = 1;
+}
+
+message SignMsgSignatureRequest {}
+
+message SignMsgRequest {
+  oneof request {
+    SignMsgInitiateRequest initiate = 1;
+    SignMsgData msg_data = 2;
+    SignMsgSignatureRequest signature = 3;
+  }
+}
+
+message SignMsgResponse {
+  oneof response {
+    SignMsgConfirmationResponse confirmation = 1;
+    SignMsgDataAccepted data_accepted = 2;
+    SignMsgSignatureResponse signature = 3;
+
+    error.CommonError common_error = 4;
+  }
+}

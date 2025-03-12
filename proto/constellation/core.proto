@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "constellation/get_public_key.proto";
 import "constellation/sign_txn.proto";
+import "constellation/sign_msg.proto";
 
 import "error.proto";
 
@@ -12,6 +13,7 @@ message Query {
     GetPublicKeysRequest get_public_keys = 1;
     GetPublicKeysRequest get_user_verified_public_key = 2;
     SignTxnRequest sign_txn = 3;
+    SignMsgRequest sign_msg = 4;
   }
 }
 
@@ -20,6 +22,8 @@ message Result {
     GetPublicKeysResponse get_public_keys = 1;
     GetPublicKeysResponse get_user_verified_public_key = 2;
     SignTxnResponse sign_txn = 3;
-    error.CommonError common_error = 4;
+    SignMsgResponse sign_msg = 4;
+    
+    error.CommonError common_error = 5;
   }
 }
