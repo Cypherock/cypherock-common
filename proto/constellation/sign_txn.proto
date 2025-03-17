@@ -47,7 +47,7 @@ message Transaction {
 }
 
 message SignTxnData {
-  Transaction dag_txn = 1;
+  Transaction txn = 1;
 }
 
 message SignTxnSignatureRequest {}
