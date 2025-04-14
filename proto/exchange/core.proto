@@ -6,12 +6,12 @@ import "exchange/initiate_flow.proto";
 package exchange;
 
 message Query {
-  oneof request { InititateFlowRequest initiate = 1; }
+  oneof request { InitiateFlowRequest initiate_flow = 1; }
 }
 
 message Result {
   oneof response {
-    InitiateFlowResponse auth_wallet = 1;
+    InitiateFlowResponse initiate_flow = 1;
     error.CommonError common_error = 4;
   }
 }

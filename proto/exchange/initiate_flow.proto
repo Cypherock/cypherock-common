@@ -11,7 +11,7 @@ message CoinDetails {
 
 message InitiateExchangeRequest {
   CoinDetails from = 1;
-  CoinDetails to = 1;
+  CoinDetails to = 2;
   uint32 amount = 3;
 }
 
