@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "error.proto";
+import "exchange/initiate_flow.proto";
+
+package exchange;
+
+message Query {
+  oneof request { InititateFlowRequest initiate = 1; }
+}
+
+message Result {
+  oneof response {
+    InitiateFlowResponse auth_wallet = 1;
+    error.CommonError common_error = 4;
+  }
+}
