@@ -2,16 +2,24 @@ syntax = "proto3";
 
 import "error.proto";
 import "exchange/initiate_flow.proto";
+import "exchange/get_signature.proto";
+import "exchange/store_signature.proto";
 
 package exchange;
 
 message Query {
-  oneof request { InitiateFlowRequest initiate_flow = 1; }
+  oneof request {
+    InitiateFlowRequest initiate_flow = 1;
+    GetSignatureRequest get_signature = 2;
+    StoreSignatureRequest store_signature = 3;
+  }
 }
 
 message Result {
   oneof response {
     InitiateFlowResponse initiate_flow = 1;
+    GetSignatureResponse get_signature = 2;
+    StoreSignatureResponse store_signature = 3;
     error.CommonError common_error = 4;
   }
 }

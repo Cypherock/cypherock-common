@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package exchange;
+
+import "error.proto";
+
+message GetSignatureIntiateRequest {}
+
+message GetSignatureResultResponse {
+  bytes signature = 1;
+  uint32 index = 2;
+}
+
+message GetSignatureRequest {
+  oneof request { GetSignatureIntiateRequest initiate = 1; }
+}
+
+message GetSignatureResponse {
+  oneof response {
+    GetSignatureResultResponse result = 1;
+
+    error.CommonError common_error = 2;
+  }
+}
