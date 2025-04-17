@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package exchange;
+
+import "error.proto";
+
+message StoreSignatureIntiateRequest { bytes signature = 1; }
+
+message StoreSignatureResultResponse {}
+
+message StoreSignatureRequest {
+  oneof request { StoreSignatureIntiateRequest initiate = 1; }
+}
+
+message StoreSignatureResponse {
+  oneof response {
+    StoreSignatureResultResponse result = 1;
+
+    error.CommonError common_error = 2;
+  }
+}
