@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package exchange;
+
+import "error.proto";
+
+message CloseExchangeRequest {}
+
+message CloseExchangeResponse {}
+
+message CloseFlowRequest {
+  oneof request { CloseExchangeRequest close = 1; }
+}
+
+message CloseFlowResponse {
+  oneof response {
+    CloseExchangeResponse result = 1;
+    error.CommonError common_error = 2;
+  }
+}
