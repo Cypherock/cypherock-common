@@ -48,8 +48,8 @@ pub fn create_result() -> proto::core::Result {
     let mut result = proto::core::Result::default();
     let mut get_device_info = proto::get_device_info::Response::default();
 
-    // Choose firmware variant
-    let firmware_variant = FirmwareVariant::BtcOnly;
+    // This would be switched at compile-time for a real BTC-only build.
+    let firmware_variant = FirmwareVariant::MultiCoin;
 
     // Supported Coin #1 - BTC
     let mut coin_item_btc = proto::get_device_info::SupportedCoinItem::default();
@@ -57,8 +57,7 @@ pub fn create_result() -> proto::core::Result {
     version_btc.major = 1;
     version_btc.minor = 0;
     version_btc.patch = 0;
-    version_btc.variant_id = firmware_variant.id();
-    version_btc.variant_str = firmware_variant.name();
+    // REMOVED: Variant info does not belong to a specific coin's version.
     coin_item_btc.id = hex::decode("10").unwrap(); // BTC coin ID
     coin_item_btc.version = Some(version_btc);
 
@@ -68,8 +67,7 @@ pub fn create_result() -> proto::core::Result {
     version_eth.major = 1;
     version_eth.minor = 1;
     version_eth.patch = 16;
-    version_eth.variant_id = firmware_variant.id();
-    version_eth.variant_str = firmware_variant.name();
+    // REMOVED: Variant info does not belong to a specific coin's version.
     coin_item_eth.id = hex::decode("821034").unwrap(); // ETH coin ID
     coin_item_eth.version = Some(version_eth);
 
@@ -78,6 +76,7 @@ pub fn create_result() -> proto::core::Result {
     firmware_version.major = 1;
     firmware_version.minor = 2;
     firmware_version.patch = 0;
+    // CORRECT: Variant info is set here, on the main firmware version object.
     firmware_version.variant_id = firmware_variant.id();
     firmware_version.variant_str = firmware_variant.name();
 
@@ -123,8 +122,7 @@ pub fn parse_result(result: proto::core::Result) {
                     "\tVersion: {}.{}.{}",
                     version.major, version.minor, version.patch
                 );
-                println!("\tVariant ID: {}", version.variant_id);
-                println!("\tVariant String: {}", version.variant_str);
+                // REMOVED: No longer printing variant info per coin.
             }
         },
         _ => println!("Unsupported result"),
