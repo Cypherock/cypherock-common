@@ -2,7 +2,6 @@ use hex;
 use crate::proto;
 use crate::utils::*;
 
-// Enum to easily switch firmware variants
 enum FirmwareVariant {
     BtcOnly,
     MultiCoin,
@@ -57,7 +56,6 @@ pub fn create_result() -> proto::core::Result {
     version_btc.major = 1;
     version_btc.minor = 0;
     version_btc.patch = 0;
-    // REMOVED: Variant info does not belong to a specific coin's version.
     coin_item_btc.id = hex::decode("10").unwrap(); // BTC coin ID
     coin_item_btc.version = Some(version_btc);
 
@@ -67,7 +65,6 @@ pub fn create_result() -> proto::core::Result {
     version_eth.major = 1;
     version_eth.minor = 1;
     version_eth.patch = 16;
-    // REMOVED: Variant info does not belong to a specific coin's version.
     coin_item_eth.id = hex::decode("821034").unwrap(); // ETH coin ID
     coin_item_eth.version = Some(version_eth);
 
@@ -76,7 +73,6 @@ pub fn create_result() -> proto::core::Result {
     firmware_version.major = 1;
     firmware_version.minor = 2;
     firmware_version.patch = 0;
-    // CORRECT: Variant info is set here, on the main firmware version object.
     firmware_version.variant_id = firmware_variant.id();
     firmware_version.variant_str = firmware_variant.name();
 
