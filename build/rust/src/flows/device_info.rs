@@ -37,9 +37,9 @@ pub fn parse_query(query: &proto::core::Query) {
         None => println!("None cmd"),
         Some(proto::core::query::Request::GetDeviceInfo(cmd)) => {
             println!("Is GetDeviceInfoCmd");
-            println!("Dummy: {}", cmd.dummy);
+            println!("Dummy {}", cmd.dummy);
         },
-        _ => println!("Unsupported query"),
+        _ => println!("Unsupported query")
     }
 }
 
@@ -50,22 +50,22 @@ pub fn create_result() -> proto::core::Result {
     // This would be switched at compile-time for a real BTC-only build.
     let firmware_variant = FirmwareVariant::MultiCoin;
 
-    // Supported Coin #1 - BTC
     let mut coin_item_btc = proto::get_device_info::SupportedCoinItem::default();
     let mut version_btc = proto::common::Version::default();
     version_btc.major = 1;
     version_btc.minor = 0;
     version_btc.patch = 0;
-    coin_item_btc.id = hex::decode("10").unwrap(); // BTC coin ID
+
+    coin_item_btc.id = hex::decode("10").unwrap();
     coin_item_btc.version = Some(version_btc);
 
-    // Supported Coin #2 - ETH
     let mut coin_item_eth = proto::get_device_info::SupportedCoinItem::default();
     let mut version_eth = proto::common::Version::default();
     version_eth.major = 1;
     version_eth.minor = 1;
     version_eth.patch = 16;
-    coin_item_eth.id = hex::decode("821034").unwrap(); // ETH coin ID
+
+    coin_item_eth.id = hex::decode("821034").unwrap();
     coin_item_eth.version = Some(version_eth);
 
     // Firmware Version Info
@@ -108,7 +108,7 @@ pub fn parse_result(result: proto::core::Result) {
                 println!("Firmware Variant: {}", firmware_version.variant_str);
             }
 
-            println!("Is Authenticated: {}", cmd.is_authenticated);
+            println!("Is Authenticated: {:?}", cmd.is_authenticated);
             println!("Supported Coins: {}", cmd.coin_list.len());
 
             for coin in &cmd.coin_list {
@@ -118,18 +118,16 @@ pub fn parse_result(result: proto::core::Result) {
                     "\tVersion: {}.{}.{}",
                     version.major, version.minor, version.patch
                 );
-                // REMOVED: No longer printing variant info per coin.
             }
         },
-        _ => println!("Unsupported result"),
-    }
+        _ => println!("Unsupported result")
+    };
 }
 
 pub fn run() {
     println!();
     println!("********* Device Info: Started ************");
 
-    // Query
     let query = create_query();
     let serialized_query = serialize(&query);
     let deserialized_query = deserialize_query(&serialized_query).expect("Query deserialization failed");
@@ -138,7 +136,6 @@ pub fn run() {
 
     println!();
 
-    // Result
     let result = create_result();
     let serialized_result = serialize(&result);
     let deserialized_result = deserialize_result(&serialized_result).expect("Result deserialization failed");
