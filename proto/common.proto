@@ -2,11 +2,17 @@ syntax = "proto3";
 
 package common;
 
+enum FirmwareVariant {
+  FIRMWARE_UNKNOWN = 0;
+  BTC_ONLY = 1;
+  MULTI_COIN = 2;
+}
+
 message Version {
   uint32 major = 1;
   uint32 minor = 2;
   uint32 patch = 3;
-  uint32 variant_id = 4;
+  FirmwareVariant variant_id = 4;
   string variant_str = 5;
 }
 

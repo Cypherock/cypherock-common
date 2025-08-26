@@ -1,24 +1,13 @@
 use hex;
 use crate::proto;
 use crate::utils::*;
-
-enum FirmwareVariant {
-    BtcOnly,
-    MultiCoin,
-}
+use proto::common::FirmwareVariant
 
 impl FirmwareVariant {
-    fn id(&self) -> u32 {
-        match self {
-            FirmwareVariant::BtcOnly => 1,
-            FirmwareVariant::MultiCoin => 2,
-        }
-    }
-
     fn name(&self) -> String {
         match self {
-            FirmwareVariant::BtcOnly => "btc-only".to_string(),
-            FirmwareVariant::MultiCoin => "multi-coin".to_string(),
+            FirmwareVariant::BtcOnly => "BTC_ONLY".to_string(),
+            FirmwareVariant::MultiCoin => "MULTI_COIN".to_string(),
         }
     }
 }
@@ -47,7 +36,7 @@ pub fn create_result() -> proto::core::Result {
     let mut result = proto::core::Result::default();
     let mut get_device_info = proto::get_device_info::Response::default();
 
-    // This would be switched at compile-time for a real BTC-only build.
+    // This would be switched at compile-time for a real variant type.
     let firmware_variant = FirmwareVariant::MultiCoin;
 
     let mut coin_item_btc = proto::get_device_info::SupportedCoinItem::default();
@@ -73,7 +62,7 @@ pub fn create_result() -> proto::core::Result {
     firmware_version.major = 1;
     firmware_version.minor = 2;
     firmware_version.patch = 0;
-    firmware_version.variant_id = firmware_variant.id();
+    firmware_version.variant_id = firmware_variant as i32;
     firmware_version.variant_str = firmware_variant.name();
 
     // Device Info
