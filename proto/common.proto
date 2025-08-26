@@ -16,6 +16,12 @@ message Version {
   string variant_str = 5;
 }
 
+message AppVersion {
+  uint32 major = 1;
+  uint32 minor = 2;
+  uint32 patch = 3;
+}
+
 message ChunkPayload {
   bytes chunk = 1;
 

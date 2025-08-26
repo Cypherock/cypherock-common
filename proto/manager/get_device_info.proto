@@ -8,7 +8,7 @@ package manager;
 
 message SupportedAppletItem {
   uint32 id = 1;
-  common.Version version = 2;
+  common.AppVersion version = 2;
 }
 
 enum OnboardingStep {

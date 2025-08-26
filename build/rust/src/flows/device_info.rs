@@ -40,7 +40,7 @@ pub fn create_result() -> proto::core::Result {
     let firmware_variant = FirmwareVariant::MultiCoin;
 
     let mut coin_item_btc = proto::get_device_info::SupportedCoinItem::default();
-    let mut version_btc = proto::common::Version::default();
+    let mut version_btc = proto::common::AppVersion::default();
     version_btc.major = 1;
     version_btc.minor = 0;
     version_btc.patch = 0;
@@ -49,7 +49,7 @@ pub fn create_result() -> proto::core::Result {
     coin_item_btc.version = Some(version_btc);
 
     let mut coin_item_eth = proto::get_device_info::SupportedCoinItem::default();
-    let mut version_eth = proto::common::Version::default();
+    let mut version_eth = proto::common::AppVersion::default();
     version_eth.major = 1;
     version_eth.minor = 1;
     version_eth.patch = 16;
