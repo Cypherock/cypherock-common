@@ -6,9 +6,14 @@ import "error.proto";
 
 package manager;
 
+message FirmwareVariantInfo {
+  common.FirmwareVariant variant_id = 1;
+  string variant_str = 2;
+}
+
 message SupportedAppletItem {
   uint32 id = 1;
-  common.AppVersion version = 2;
+  common.Version version = 2;
 }
 
 enum OnboardingStep {
@@ -31,6 +36,7 @@ message GetDeviceInfoResultResponse {
 
   bool is_initial = 5;
   OnboardingStep onboarding_step = 6;
+  FirmwareVariantInfo firmware_variant_info = 7;
 }
 
 message GetDeviceInfoRequest {

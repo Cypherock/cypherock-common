@@ -7,7 +7,7 @@ package core;
 
 message AppVersionItem {
   uint32 id = 1;
-  common.AppVersion version = 2;
+  common.Version version = 2;
 }
 
 message AppVersionIntiateRequest {

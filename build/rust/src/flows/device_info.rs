@@ -36,11 +36,8 @@ pub fn create_result() -> proto::core::Result {
     let mut result = proto::core::Result::default();
     let mut get_device_info = proto::get_device_info::Response::default();
 
-    // This would be switched at compile-time for a real variant type.
-    let firmware_variant = FirmwareVariant::MultiCoin;
-
     let mut coin_item_btc = proto::get_device_info::SupportedCoinItem::default();
-    let mut version_btc = proto::common::AppVersion::default();
+    let mut version_btc = proto::common::Version::default();
     version_btc.major = 1;
     version_btc.minor = 0;
     version_btc.patch = 0;
@@ -49,7 +46,7 @@ pub fn create_result() -> proto::core::Result {
     coin_item_btc.version = Some(version_btc);
 
     let mut coin_item_eth = proto::get_device_info::SupportedCoinItem::default();
-    let mut version_eth = proto::common::AppVersion::default();
+    let mut version_eth = proto::common::Version::default();
     version_eth.major = 1;
     version_eth.minor = 1;
     version_eth.patch = 16;
@@ -62,13 +59,18 @@ pub fn create_result() -> proto::core::Result {
     firmware_version.major = 1;
     firmware_version.minor = 2;
     firmware_version.patch = 0;
-    firmware_version.variant_id = firmware_variant as i32;
-    firmware_version.variant_str = firmware_variant.name();
+
+    // Firmware Variant Info
+    let mut firmware_variant_info = proto::get_device_info::FirmwareVariantInfo::default();
+    let firmware_variant = FirmwareVariant::MultiCoin;
+    firmware_variant_info.variant_id = firmware_variant as i32;
+    firmware_variant_info.variant_str = firmware_variant.name();
 
     // Device Info
     get_device_info.device_serial = hex::decode("67458743").unwrap();
     get_device_info.firmware_version = Some(firmware_version);
     get_device_info.is_authenticated = true;
+    get_device_info.firmware_variant_info = Some(firmware_variant_info);
 
     // Coin support depends on variant
     get_device_info.coin_list = match firmware_variant {
@@ -93,8 +95,11 @@ pub fn parse_result(result: proto::core::Result) {
                     "Firmware Version: {}.{}.{}",
                     firmware_version.major, firmware_version.minor, firmware_version.patch
                 );
-                println!("Firmware Variant ID: {}", firmware_version.variant_id);
-                println!("Firmware Variant: {}", firmware_version.variant_str);
+            }
+
+            if let Some(firmware_variant_info) = &cmd.firmware_variant_info {
+                println!("Firmware Variant ID: {}", firmware_variant_info.variant_id);
+                println!("Firmware Variant: {}", firmware_variant_info.variant_str);
             }
 
             println!("Is Authenticated: {:?}", cmd.is_authenticated);
