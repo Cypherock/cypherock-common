@@ -8,6 +8,12 @@ message Version {
   uint32 patch = 3;
 }
 
+enum FirmwareVariant {
+  FIRMWARE_UNKNOWN = 0;
+  BTC_ONLY = 1;
+  MULTI_COIN = 2;
+}
+
 message ChunkPayload {
   bytes chunk = 1;
 

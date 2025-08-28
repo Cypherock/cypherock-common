@@ -1,6 +1,16 @@
 use hex;
 use crate::proto;
 use crate::utils::*;
+use proto::common::FirmwareVariant
+
+impl FirmwareVariant {
+    fn name(&self) -> String {
+        match self {
+            FirmwareVariant::BtcOnly => "BTC_ONLY".to_string(),
+            FirmwareVariant::MultiCoin => "MULTI_COIN".to_string(),
+        }
+    }
+}
 
 pub fn create_query() -> proto::core::Query {
     let mut query = proto::core::Query::default();
@@ -19,7 +29,7 @@ pub fn parse_query(query: &proto::core::Query) {
             println!("Dummy {}", cmd.dummy);
         },
         _ => println!("Unsupported query")
-    };
+    }
 }
 
 pub fn create_result() -> proto::core::Result {
@@ -28,7 +38,6 @@ pub fn create_result() -> proto::core::Result {
 
     let mut coin_item_btc = proto::get_device_info::SupportedCoinItem::default();
     let mut version_btc = proto::common::Version::default();
-
     version_btc.major = 1;
     version_btc.minor = 0;
     version_btc.patch = 0;
@@ -38,7 +47,6 @@ pub fn create_result() -> proto::core::Result {
 
     let mut coin_item_eth = proto::get_device_info::SupportedCoinItem::default();
     let mut version_eth = proto::common::Version::default();
-
     version_eth.major = 1;
     version_eth.minor = 1;
     version_eth.patch = 16;
@@ -46,15 +54,29 @@ pub fn create_result() -> proto::core::Result {
     coin_item_eth.id = hex::decode("821034").unwrap();
     coin_item_eth.version = Some(version_eth);
 
+    // Firmware Version Info
     let mut firmware_version = proto::common::Version::default();
     firmware_version.major = 1;
     firmware_version.minor = 2;
     firmware_version.patch = 0;
 
+    // Firmware Variant Info
+    let mut firmware_variant_info = proto::get_device_info::FirmwareVariantInfo::default();
+    let firmware_variant = FirmwareVariant::MultiCoin;
+    firmware_variant_info.variant_id = firmware_variant as i32;
+    firmware_variant_info.variant_str = firmware_variant.name();
+
+    // Device Info
     get_device_info.device_serial = hex::decode("67458743").unwrap();
     get_device_info.firmware_version = Some(firmware_version);
     get_device_info.is_authenticated = true;
-    get_device_info.coin_list = vec![coin_item_btc, coin_item_eth];
+    get_device_info.firmware_variant_info = Some(firmware_variant_info);
+
+    // Coin support depends on variant
+    get_device_info.coin_list = match firmware_variant {
+        FirmwareVariant::BtcOnly => vec![coin_item_btc],
+        FirmwareVariant::MultiCoin => vec![coin_item_btc, coin_item_eth],
+    };
 
     result.response = Some(proto::core::result::Response::GetDeviceInfo(get_device_info));
     result
@@ -66,17 +88,30 @@ pub fn parse_result(result: proto::core::Result) {
         None => println!("None cmd"),
         Some(proto::core::result::Response::GetDeviceInfo(cmd)) => {
             println!("Is GetDeviceInfoResult");
-            println!("Device Serial: {:?}", hex::encode(cmd.device_serial));
-            let firmware_version = cmd.firmware_version.unwrap();
-            println!("Firmware version: {}.{}.{}", firmware_version.major, firmware_version.minor, firmware_version.patch);
+            println!("Device Serial: {:?}", hex::encode(&cmd.device_serial));
+
+            if let Some(firmware_version) = &cmd.firmware_version {
+                println!(
+                    "Firmware Version: {}.{}.{}",
+                    firmware_version.major, firmware_version.minor, firmware_version.patch
+                );
+            }
+
+            if let Some(firmware_variant_info) = &cmd.firmware_variant_info {
+                println!("Firmware Variant ID: {}", firmware_variant_info.variant_id);
+                println!("Firmware Variant: {}", firmware_variant_info.variant_str);
+            }
+
             println!("Is Authenticated: {:?}", cmd.is_authenticated);
+            println!("Supported Coins: {}", cmd.coin_list.len());
 
-            println!("Has Coins: {}", cmd.coin_list.len());
-
-            for coin in cmd.coin_list.iter() {
+            for coin in &cmd.coin_list {
                 let version = coin.version.as_ref().unwrap();
-                println!("\tId: {:?}", hex::encode(coin.id.clone()));
-                println!("\tVersion: {}.{}.{}", version.major, version.minor, version.patch);
+                println!("\tCoin ID: {:?}", hex::encode(&coin.id));
+                println!(
+                    "\tVersion: {}.{}.{}",
+                    version.major, version.minor, version.patch
+                );
             }
         },
         _ => println!("Unsupported result")
@@ -84,20 +119,22 @@ pub fn parse_result(result: proto::core::Result) {
 }
 
 pub fn run() {
-    println!("");
+    println!();
     println!("********* Device Info: Started ************");
+
     let query = create_query();
-    let serialized = serialize(&query);
-    let deserialized = deserialize_query(&serialized).expect("Error");
-    println!("Serialized Query: {:?}", serialized);
-    parse_query(&deserialized);
+    let serialized_query = serialize(&query);
+    let deserialized_query = deserialize_query(&serialized_query).expect("Query deserialization failed");
+    println!("Serialized Query: {:?}", serialized_query);
+    parse_query(&deserialized_query);
 
     println!();
 
     let result = create_result();
-    let serialized = serialize(&result);
-    let deserialized = deserialize_result(&serialized).expect("Error");
-    println!("Serialized Result: {:?}", serialized);
-    parse_result(deserialized);
+    let serialized_result = serialize(&result);
+    let deserialized_result = deserialize_result(&serialized_result).expect("Result deserialization failed");
+    println!("Serialized Result: {:?}", serialized_result);
+    parse_result(deserialized_result);
+
     println!("********* Device Info: Completed ************");
 }
