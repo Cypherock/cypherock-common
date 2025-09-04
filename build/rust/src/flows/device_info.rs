@@ -3,15 +3,6 @@ use crate::proto;
 use crate::utils::*;
 use proto::common::FirmwareVariant
 
-impl FirmwareVariant {
-    fn name(&self) -> String {
-        match self {
-            FirmwareVariant::BtcOnly => "BTC_ONLY".to_string(),
-            FirmwareVariant::MultiCoin => "MULTI_COIN".to_string(),
-        }
-    }
-}
-
 pub fn create_query() -> proto::core::Query {
     let mut query = proto::core::Query::default();
     let mut get_device_info = proto::get_device_info::Request::default();
@@ -29,7 +20,7 @@ pub fn parse_query(query: &proto::core::Query) {
             println!("Dummy {}", cmd.dummy);
         },
         _ => println!("Unsupported query")
-    }
+    };
 }
 
 pub fn create_result() -> proto::core::Result {
@@ -61,16 +52,13 @@ pub fn create_result() -> proto::core::Result {
     firmware_version.patch = 0;
 
     // Firmware Variant Info
-    let mut firmware_variant_info = proto::get_device_info::FirmwareVariantInfo::default();
     let firmware_variant = FirmwareVariant::MultiCoin;
-    firmware_variant_info.variant_id = firmware_variant as i32;
-    firmware_variant_info.variant_str = firmware_variant.name();
 
     // Device Info
     get_device_info.device_serial = hex::decode("67458743").unwrap();
     get_device_info.firmware_version = Some(firmware_version);
     get_device_info.is_authenticated = true;
-    get_device_info.firmware_variant_info = Some(firmware_variant_info);
+    get_device_info.firmware_variant = firmware_variant as i32;
 
     // Coin support depends on variant
     get_device_info.coin_list = match firmware_variant {
@@ -97,11 +85,7 @@ pub fn parse_result(result: proto::core::Result) {
                 );
             }
 
-            if let Some(firmware_variant_info) = &cmd.firmware_variant_info {
-                println!("Firmware Variant ID: {}", firmware_variant_info.variant_id);
-                println!("Firmware Variant: {}", firmware_variant_info.variant_str);
-            }
-
+            println!("Firmware Variant: {}", cmd.firmware_variant);
             println!("Is Authenticated: {:?}", cmd.is_authenticated);
             println!("Supported Coins: {}", cmd.coin_list.len());
 
