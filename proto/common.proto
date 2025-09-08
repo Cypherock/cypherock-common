@@ -9,9 +9,8 @@ message Version {
 }
 
 enum FirmwareVariant {
-  FIRMWARE_UNKNOWN = 0;
+  MULTI_COIN = 0;
   BTC_ONLY = 1;
-  MULTI_COIN = 2;
 }
 
 message ChunkPayload {
