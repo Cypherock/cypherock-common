@@ -31,3 +31,5 @@ enum SeedGenerationStatus {
   SEED_GENERATION_STATUS_PASSPHRASE = 1;
   SEED_GENERATION_STATUS_PIN_CARD = 2;
 };
+
+message Empty {}
