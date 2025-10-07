@@ -2,9 +2,13 @@ syntax = "proto3";
 
 package canton;
 
+import "common.proto";
 import "error.proto";
 
 message Query {
+  oneof request {
+    common.Empty empty = 1;
+  }
 }
 
 message Result {
