@@ -2,16 +2,13 @@ syntax = "proto3";
 
 package canton;
 
-import "canton/sign_txn.proto";
 import "error.proto";
 
 message Query {
-  oneof request { SignTxnRequest sign_txn = 3; }
 }
 
 message Result {
   oneof response {
-    SignTxnResponse sign_txn = 3;
     error.CommonError common_error = 4;
   }
 }
