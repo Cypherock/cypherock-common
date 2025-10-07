@@ -4,14 +4,14 @@ package canton;
 
 import "common.proto";
 import "error.proto";
-import "canton/canton_prepared_transaction.proto";
+import "canton/canton_txn_nodes.proto";
 
 /**
    * Example:
    *
    *        Host                       Device
    *
-   * SignTxnInitRequest      =>
+   * SignTxnInitiateRequest      =>
    *                         <= SignTxnInitConfirmResponse
 
    * For Each Node (first child nodes and then parent nodes):
@@ -43,40 +43,12 @@ enum SignTxnStatus {
   SIGN_TXN_STATUS_SEED_GENERATED = 3;
 }
 
-message SignTxnInitRequest {
+message SignTxnInitiateRequest {
   bytes wallet_id = 1;
-  string transaction_version = 2;
   repeated uint32 derivation_path = 3;
-  uint32 nodes_count = 4;
-  repeated uint32 nodes_sizes = 5;
 }
 
 message SignTxnInitConfirmResponse {}
-
-message SignTxnNodeMetadataRequest {
-  string node_id = 1;
-  bool is_root = 2;
-  optional string parent_id = 3;
-  repeated canton.DamlTransaction.NodeSeed node_seeds = 4;
-}
-
-message SignTxnNodeMetadataResponse {}
-
-message SignTxnNodeDataRequest {
-  common.ChunkPayload chunk_payload = 1;
-}
-
-message SignTxnNodeDataResponse {
-  common.ChunkAck chunk_ack = 1;
-}
-
-message SignTxnMetadataRequest {
-  common.ChunkPayload chunk_payload = 1;
-}
-
-message SignTxnMetadataResponse {
-  common.ChunkAck chunk_ack = 1;
-}
 
 message SignTxnSignatureRequest {}
 
@@ -86,10 +58,7 @@ message SignTxnSignatureResponse {
 
 message SignTxnRequest {
   oneof request {
-    SignTxnInitRequest initiate = 1;
-    SignTxnNodeMetadataRequest node_metadata = 2;
-    SignTxnNodeDataRequest node_data = 3;
-    SignTxnMetadataRequest metadata = 4;
+    SignTxnInitiateRequest initiate = 1;
     SignTxnSignatureRequest signature = 5;
   }
 }
@@ -97,9 +66,6 @@ message SignTxnRequest {
 message SignTxnResponse {
   oneof response {
     SignTxnInitConfirmResponse confirmation = 1;
-    SignTxnNodeMetadataResponse node_metadata_response = 2;
-    SignTxnNodeDataResponse node_data_response = 3;
-    SignTxnMetadataResponse metadata_response = 4;
     SignTxnSignatureResponse signature = 5;
 
     error.CommonError common_error = 6;

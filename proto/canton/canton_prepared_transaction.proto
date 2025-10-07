@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package canton;
 
+import "canton/canton_base.proto";
 import "canton/canton_value.proto";
 import "canton/canton_txn_nodes.proto";
 
@@ -9,7 +10,6 @@ message PreparedTransaction {
   DamlTransaction transaction = 1;
   Metadata metadata = 2;
 }
-
 
 message Metadata {
   message SubmitterInfo {
@@ -46,8 +46,6 @@ message Metadata {
   repeated GlobalKeyMappingEntry global_key_mapping = 8;
 }
 
-
-
 message DamlTransaction {
   message NodeSeed {
     int32 node_id = 1;
@@ -67,7 +65,6 @@ message DamlTransaction {
   repeated DNode nodes = 3;
   repeated NodeSeed node_seeds = 4;
 }
-
 
 message GlobalKey {
   Identifier template_id = 1;
