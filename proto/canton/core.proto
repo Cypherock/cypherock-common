@@ -3,12 +3,20 @@ syntax = "proto3";
 package canton;
 
 import "error.proto";
+import "canton/get_public_key.proto";
 
 message Query {
+  oneof request {
+    GetPublicKeysRequest get_public_keys = 1;
+    GetPublicKeysRequest get_user_verified_public_key = 2;
+  }
 }
 
 message Result {
   oneof response {
+    GetPublicKeysResponse get_public_keys = 1;
+    GetPublicKeysResponse get_user_verified_public_key = 2;
+
     error.CommonError common_error = 4;
   }
 }
