@@ -2,8 +2,7 @@ syntax = "proto3";
 
 package canton;
 
-import "canton/canton_base.proto";
-import "canton/canton_value.proto";
+import "canton/internal/canton_value.proto";
 
 message Fetch {
   string lf_version = 1;

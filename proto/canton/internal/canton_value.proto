@@ -3,7 +3,17 @@ syntax = "proto3";
 package canton;
 
 import "common.proto";
-import "canton/canton_base.proto";
+
+message Identifier {
+  string package_id = 1;
+  string module_name = 2;
+  string entity_name = 3;
+}
+
+message Enum {
+  Identifier enum_id = 1;
+  string constructor = 2;
+}
 
 message Value {
   oneof sum {

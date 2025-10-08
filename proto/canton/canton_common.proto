@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package canton;
+
+message NodeSeed {
+  int32 node_id = 1;
+  bytes seed = 2;
+}
+
+message SubmitterInfo {
+  repeated string act_as = 1;
+  string command_id = 2;
+}

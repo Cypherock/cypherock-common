@@ -2,9 +2,9 @@ syntax = "proto3";
 
 package canton;
 
-import "canton/canton_base.proto";
-import "canton/canton_value.proto";
-import "canton/canton_txn_nodes.proto";
+import "canton/canton_common.proto";
+import "canton/internal/canton_value.proto";
+import "canton/internal/canton_txn_nodes.proto";
 
 message PreparedTransaction {
   DamlTransaction transaction = 1;
@@ -47,11 +47,6 @@ message Metadata {
 }
 
 message DamlTransaction {
-  message NodeSeed {
-    int32 node_id = 1;
-    bytes seed = 2;
-  }
-
   message DNode {
     string node_id = 1;
 

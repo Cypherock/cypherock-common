@@ -1,41 +1,62 @@
 syntax = "proto3";
 
-package canton;
-
 import "common.proto";
 import "error.proto";
-import "canton/canton_txn_nodes.proto";
+import "canton/canton_common.proto";
+
+package canton;
 
 /**
-   * Example:
-   *
-   *        Host                       Device
-   *
-   * SignTxnInitiateRequest      =>
-   *                         <= SignTxnInitConfirmResponse
+ * Example where there are 2 node_seeds, 2 nodes, 2 input_contracts and 2 global_key_mapping in the txn
+ *
+ *        Host                       Device
+ *
+ * SignTxnInitiateRequest  => 
+ *                         <= SignTxnConfirmationResponse
+ * SignTxnTransactionMetadata         =>
+ *                         <= SignTxnTransactionMetadataAccepted
+ *
+ * -------------txn_node_seed start------------------
+ * SignTxnNodeSeed            =>
+ *                         <= SignTxnNodeSeedAccepted
+ *
+ * SignTxnNodeSeed            =>
+ *                         <= SignTxnNodeSeedAccepted
+ * -------------txn_node_seed end---------------------
+ *
+ * ------------------txn_node start------------------------
+ * SignTxnSerializedData           =>
+ *                         <= SignTxnSerializedDataAccepted
+ * SignTxnSerializedData           =>
+ *                         <= SignTxnSerializedDataAccepted
+ * ------------------txn_node end---------------------------
+ *
+ * SignTxnTransactionMetadata         =>
+ *                         <= SignTxnTransactionMetadataAccepted
+ *
+ * --------------meta_input_contract start-----------------
+ * SignTxnSerializedData           =>
+ *                         <= SignTxnSerializedDataAccepted
+ * SignTxnSerializedData           =>
+ *                         <= SignTxnSerializedDataAccepted
+ * --------------meta_input_contract end-------------------
+ *
+ * ----------meta_global_key_mapping_entry start-----------
+ * SignTxnSerializedData           =>
+ *                         <= SignTxnSerializedDataAccepted
+ * SignTxnSerializedData           =>
+ *                         <= SignTxnSerializedDataAccepted
+ * ----------meta_global_key_mapping_entry end-----------
+ *
+ * **** Device has all transaction information ****
+ *
+ *
+ * SignTxnSignatureRequest =>
+ *                         <= SignTxnSignatureResponse
+ * SignTxnSignatureRequest =>
+ *                         <= SignTxnSignatureResponse
+ */
 
-   * For Each Node (first child nodes and then parent nodes):
-   *
-   *   SignTxnNodeMetadataRequest  =>
-   *                               <= SignTxnNodeMetadataResponse
-   *
-   *   SignTxnNodeDataRequest      =>
-   *                               <= SignTxnNodeDataResponse
-   *                          ....
-   *   SignTxnNodeDataRequest      =>
-   *                               <= SignTxnNodeDataResponse
-   *
-   * SignTxnMetadataRequest        =>
-   *                               <= SignTxnMetadataResponse
-   *                          ....
-   * SignTxnMetadataRequest        =>
-                                   <= SignTxnMetadataResponse
-   *
-   * **** Device has all transaction information ****
-   *
-   * SignTxnSignatureRequest      =>
-   *                              <= SignTxnSignatureResponse
-*/
 enum SignTxnStatus {
   SIGN_TXN_STATUS_INIT = 0;
   SIGN_TXN_STATUS_CONFIRM = 1;
@@ -45,10 +66,49 @@ enum SignTxnStatus {
 
 message SignTxnInitiateRequest {
   bytes wallet_id = 1;
-  repeated uint32 derivation_path = 3;
+  repeated uint32 derivation_path = 2;
 }
 
-message SignTxnInitConfirmResponse {}
+message SignTxnConfirmationResponse {}
+
+message SignTxnTransactionMetadata {
+  string version = 1;
+  repeated string roots = 2;
+  uint32 node_seeds_count = 3;
+  uint32 nodes_count = 4;
+}
+
+message SignTxnTransactionMetadataAccepted {}
+
+message SignTxnNodeSeed {
+  NodeSeed node_seed = 1;
+}
+
+message SignTxnNodeSeedAccepted {}
+
+message SignTxnSerializedData {
+  common.ChunkPayload chunk_payload = 1;
+}
+
+message SignTxnSerializedDataAccepted {
+  common.ChunkAck chunk_ack = 1;
+}
+
+message SignTxnCantonMetadata {
+  reserved 1;
+
+  SubmitterInfo submitter_info = 2;
+  string synchronizer_id = 3;
+  uint32 mediator_group = 4;
+  string transaction_uuid = 5;
+  uint64 preparation_time = 6;
+  uint32 input_contracts_count = 7;
+  uint32 global_key_mapping_count = 8;
+  optional uint64 min_ledger_effective_time = 9;
+  optional uint64 max_ledger_effective_time = 10;
+}
+
+message SignTxnCantonMetadataAccepted {}
 
 message SignTxnSignatureRequest {}
 
@@ -59,15 +119,27 @@ message SignTxnSignatureResponse {
 message SignTxnRequest {
   oneof request {
     SignTxnInitiateRequest initiate = 1;
-    SignTxnSignatureRequest signature = 5;
+    SignTxnTransactionMetadata txn_meta = 2;
+    SignTxnNodeSeed txn_node_seed = 3;
+    SignTxnSerializedData txn_node = 4;
+    SignTxnCantonMetadata canton_meta = 5;
+    SignTxnSerializedData meta_input_contract = 6;
+    SignTxnSerializedData meta_global_key_mapping_entry = 7;
+    SignTxnSignatureRequest signature = 8;
   }
 }
 
 message SignTxnResponse {
   oneof response {
-    SignTxnInitConfirmResponse confirmation = 1;
-    SignTxnSignatureResponse signature = 5;
+    SignTxnConfirmationResponse confirmation = 1;
+    SignTxnTransactionMetadataAccepted txn_meta_accepted = 2;
+    SignTxnNodeSeedAccepted txn_node_seed_accepted = 3;
+    SignTxnSerializedDataAccepted txn_node_accepted = 4;
+    SignTxnCantonMetadataAccepted canton_meta_accepted = 5;
+    SignTxnSerializedDataAccepted meta_input_contract_accepted = 6;
+    SignTxnSerializedDataAccepted meta_global_key_mapping_entry_accepted = 7;
+    SignTxnSignatureResponse signature = 8;
 
-    error.CommonError common_error = 6;
+    error.CommonError common_error = 9;
   }
 }
