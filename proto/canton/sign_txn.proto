@@ -6,7 +6,7 @@ import "error.proto";
 package canton;
 
 /**
- * Example where there are 2 node_seeds, 2 nodes, 2 input_contracts and 2 global_key_mapping in the txn
+ * Example where there are 2 node_seeds, 2 nodes and 2 input_contracts in the txn
  *
  *        Host                       Device
  *
@@ -24,8 +24,14 @@ package canton;
  * -------------txn_node_seed end---------------------
  *
  * ------------------txn_node start------------------------
+ * SignTxnSerializedDataMetadata           =>
+ *                         <= SignTxnSerializedDataMetadataAccepted
  * SignTxnSerializedData           =>
  *                         <= SignTxnSerializedDataAccepted
+ *
+ *
+ * SignTxnSerializedDataMetadata           =>
+ *                         <= SignTxnSerializedDataMetadataAccepted
  * SignTxnSerializedData           =>
  *                         <= SignTxnSerializedDataAccepted
  * ------------------txn_node end---------------------------
@@ -34,18 +40,18 @@ package canton;
  *                         <= SignTxnTransactionMetadataAccepted
  *
  * --------------meta_input_contract start-----------------
+ * SignTxnSerializedDataMetadata           =>
+ *                         <= SignTxnSerializedDataMetadataAccepted
  * SignTxnSerializedData           =>
  *                         <= SignTxnSerializedDataAccepted
+ *
+ *
+ * SignTxnSerializedDataMetadata           =>
+ *                         <= SignTxnSerializedDataMetadataAccepted
  * SignTxnSerializedData           =>
  *                         <= SignTxnSerializedDataAccepted
  * --------------meta_input_contract end-------------------
  *
- * ----------meta_global_key_mapping_entry start-----------
- * SignTxnSerializedData           =>
- *                         <= SignTxnSerializedDataAccepted
- * SignTxnSerializedData           =>
- *                         <= SignTxnSerializedDataAccepted
- * ----------meta_global_key_mapping_entry end-----------
  *
  * **** Device has all transaction information ****
  *
@@ -89,6 +95,12 @@ message SignTxnNodeSeed {
 
 message SignTxnNodeSeedAccepted {}
 
+message SignTxnSerializedDataMetadata {
+  uint32 serialized_data_size = 1;
+}
+
+message SignTxnSerializedDataMetadataAccepted {};
+
 message SignTxnSerializedData {
   common.ChunkPayload chunk_payload = 1;
 }
@@ -111,7 +123,6 @@ message SignTxnCantonMetadata {
   string transaction_uuid = 5;
   uint64 preparation_time = 6;
   uint32 input_contracts_count = 7;
-  uint32 global_key_mapping_count = 8;
   optional uint64 min_ledger_effective_time = 9;
   optional uint64 max_ledger_effective_time = 10;
 }
@@ -129,11 +140,12 @@ message SignTxnRequest {
     SignTxnInitiateRequest initiate = 1;
     SignTxnTransactionMetadata txn_meta = 2;
     SignTxnNodeSeed txn_node_seed = 3;
-    SignTxnSerializedData txn_node = 4;
-    SignTxnCantonMetadata canton_meta = 5;
-    SignTxnSerializedData meta_input_contract = 6;
-    SignTxnSerializedData meta_global_key_mapping_entry = 7;
-    SignTxnSignatureRequest signature = 8;
+    SignTxnSerializedDataMetadata txn_node_meta = 4;
+    SignTxnSerializedData txn_node = 5;
+    SignTxnCantonMetadata canton_meta = 6;
+    SignTxnSerializedDataMetadata meta_input_contract_meta = 7;
+    SignTxnSerializedData meta_input_contract = 8;
+    SignTxnSignatureRequest signature = 11;
   }
 }
 
@@ -142,12 +154,13 @@ message SignTxnResponse {
     SignTxnConfirmationResponse confirmation = 1;
     SignTxnTransactionMetadataAccepted txn_meta_accepted = 2;
     SignTxnNodeSeedAccepted txn_node_seed_accepted = 3;
-    SignTxnSerializedDataAccepted txn_node_accepted = 4;
-    SignTxnCantonMetadataAccepted canton_meta_accepted = 5;
-    SignTxnSerializedDataAccepted meta_input_contract_accepted = 6;
-    SignTxnSerializedDataAccepted meta_global_key_mapping_entry_accepted = 7;
-    SignTxnSignatureResponse signature = 8;
+    SignTxnSerializedDataMetadataAccepted txn_node_meta_accepted = 4;
+    SignTxnSerializedDataAccepted txn_node_accepted = 5;
+    SignTxnCantonMetadataAccepted canton_meta_accepted = 6;
+    SignTxnSerializedDataMetadataAccepted meta_input_contract_meta_accepted = 7;
+    SignTxnSerializedDataAccepted meta_input_contract_accepted = 8;
+    SignTxnSignatureResponse signature = 11;
 
-    error.CommonError common_error = 9;
+    error.CommonError common_error = 12;
   }
 }
