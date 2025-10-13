@@ -4,11 +4,13 @@ package canton;
 
 import "error.proto";
 import "canton/get_public_key.proto";
+import "canton/sign_topology_txn.proto";
 
 message Query {
   oneof request {
     GetPublicKeysRequest get_public_keys = 1;
     GetPublicKeysRequest get_user_verified_public_key = 2;
+    SignTopologyTxnRequest sign_topology_txn = 3;
   }
 }
 
@@ -16,6 +18,7 @@ message Result {
   oneof response {
     GetPublicKeysResponse get_public_keys = 1;
     GetPublicKeysResponse get_user_verified_public_key = 2;
+    SignTopologyTxnResponse sign_topology_txn = 3;
 
     error.CommonError common_error = 4;
   }
