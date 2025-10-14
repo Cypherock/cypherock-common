@@ -26,10 +26,10 @@ package canton;
  *                         <= SignTopologyTxnSignatureResponse
  */
 enum SignTopologyTxnStatus {
-  SIGN_TXN_STATUS_INIT = 0;
-  SIGN_TXN_STATUS_CONFIRM = 1;
-  SIGN_TXN_STATUS_VERIFY = 2;
-  SIGN_TXN_STATUS_SEED_GENERATED = 3;
+  SIGN_TOPOLOGY_TXN_STATUS_INIT = 0;
+  SIGN_TOPOLOGY_TXN_STATUS_CONFIRM = 1;
+  SIGN_TOPOLOGY_TXN_STATUS_VERIFY = 2;
+  SIGN_TOPOLOGY_TXN_STATUS_SEED_GENERATED = 3;
 }
 
 message SignTopologyTxnInitiateRequest {
