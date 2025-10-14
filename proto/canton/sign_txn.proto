@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+import "common.proto";
+import "error.proto";
+
+package canton;
+
+/**
+ * Example where there are 2 node_seeds, 2 nodes and 2 input_contracts in the txn
+ *
+ *        Host                       Device
+ *
+ * SignTxnInitiateRequest  => 
+ *                         <= SignTxnConfirmationResponse
+ * SignTxnTransactionMetadata         =>
+ *                         <= SignTxnTransactionMetadataAccepted
+ *
+ * -------------txn_node_seed start------------------
+ * SignTxnNodeSeed            =>
+ *                         <= SignTxnNodeSeedAccepted
+ *
+ * SignTxnNodeSeed            =>
+ *                         <= SignTxnNodeSeedAccepted
+ * -------------txn_node_seed end---------------------
+ *
+ * ------------------txn_node start------------------------
+ * SignTxnSerializedDataMetadata           =>
+ *                         <= SignTxnSerializedDataMetadataAccepted
+ * SignTxnSerializedData           =>
+ *                         <= SignTxnSerializedDataAccepted
+ *
+ *
+ * SignTxnSerializedDataMetadata           =>
+ *                         <= SignTxnSerializedDataMetadataAccepted
+ * SignTxnSerializedData           =>
+ *                         <= SignTxnSerializedDataAccepted
+ * ------------------txn_node end---------------------------
+ *
+ * SignTxnTransactionMetadata         =>
+ *                         <= SignTxnTransactionMetadataAccepted
+ *
+ * --------------meta_input_contract start-----------------
+ * SignTxnSerializedDataMetadata           =>
+ *                         <= SignTxnSerializedDataMetadataAccepted
+ * SignTxnSerializedData           =>
+ *                         <= SignTxnSerializedDataAccepted
+ *
+ *
+ * SignTxnSerializedDataMetadata           =>
+ *                         <= SignTxnSerializedDataMetadataAccepted
+ * SignTxnSerializedData           =>
+ *                         <= SignTxnSerializedDataAccepted
+ * --------------meta_input_contract end-------------------
+ *
+ *
+ * **** Device has all transaction information ****
+ *
+ *
+ * SignTxnSignatureRequest =>
+ *                         <= SignTxnSignatureResponse
+ * SignTxnSignatureRequest =>
+ *                         <= SignTxnSignatureResponse
+ */
+
+enum SignTxnStatus {
+  SIGN_TXN_STATUS_INIT = 0;
+  SIGN_TXN_STATUS_CONFIRM = 1;
+  SIGN_TXN_STATUS_VERIFY = 2;
+  SIGN_TXN_STATUS_SEED_GENERATED = 3;
+}
+
+message SignTxnInitiateRequest {
+  bytes wallet_id = 1;
+  repeated uint32 derivation_path = 2;
+}
+
+message SignTxnConfirmationResponse {}
+
+message SignTxnTransactionMetadata {
+  string version = 1;
+  repeated string roots = 2;
+  uint32 node_seeds_count = 3;
+  uint32 nodes_count = 4;
+}
+
+message SignTxnTransactionMetadataAccepted {}
+
+message SignTxnNodeSeed {
+  message NodeSeed {
+    int32 node_id = 1;
+    bytes seed = 2;
+  }
+  NodeSeed node_seed = 1;
+}
+
+message SignTxnNodeSeedAccepted {}
+
+message SignTxnSerializedDataMetadata {
+  uint32 serialized_data_size = 1;
+}
+
+message SignTxnSerializedDataMetadataAccepted {};
+
+message SignTxnSerializedData {
+  common.ChunkPayload chunk_payload = 1;
+}
+
+message SignTxnSerializedDataAccepted {
+  common.ChunkAck chunk_ack = 1;
+}
+
+message SignTxnCantonMetadata {
+  message SubmitterInfo {
+    repeated string act_as = 1;
+    string command_id = 2;
+  }
+
+  reserved 1;
+
+  SubmitterInfo submitter_info = 2;
+  string synchronizer_id = 3;
+  uint32 mediator_group = 4;
+  string transaction_uuid = 5;
+  uint64 preparation_time = 6;
+  uint32 input_contracts_count = 7;
+  optional uint64 min_ledger_effective_time = 9;
+  optional uint64 max_ledger_effective_time = 10;
+}
+
+message SignTxnCantonMetadataAccepted {}
+
+message SignTxnSignatureRequest {}
+
+message SignTxnSignatureResponse {
+  bytes signature = 1;
+}
+
+message SignTxnRequest {
+  oneof request {
+    SignTxnInitiateRequest initiate = 1;
+    SignTxnTransactionMetadata txn_meta = 2;
+    SignTxnNodeSeed txn_node_seed = 3;
+    SignTxnSerializedDataMetadata txn_node_meta = 4;
+    SignTxnSerializedData txn_node = 5;
+    SignTxnCantonMetadata canton_meta = 6;
+    SignTxnSerializedDataMetadata meta_input_contract_meta = 7;
+    SignTxnSerializedData meta_input_contract = 8;
+    SignTxnSignatureRequest signature = 11;
+  }
+}
+
+message SignTxnResponse {
+  oneof response {
+    SignTxnConfirmationResponse confirmation = 1;
+    SignTxnTransactionMetadataAccepted txn_meta_accepted = 2;
+    SignTxnNodeSeedAccepted txn_node_seed_accepted = 3;
+    SignTxnSerializedDataMetadataAccepted txn_node_meta_accepted = 4;
+    SignTxnSerializedDataAccepted txn_node_accepted = 5;
+    SignTxnCantonMetadataAccepted canton_meta_accepted = 6;
+    SignTxnSerializedDataMetadataAccepted meta_input_contract_meta_accepted = 7;
+    SignTxnSerializedDataAccepted meta_input_contract_accepted = 8;
+    SignTxnSignatureResponse signature = 11;
+
+    error.CommonError common_error = 12;
+  }
+}
