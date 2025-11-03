@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package canton;
+
+enum CantonNetworkType {
+  MAINNET = 0;
+  TESTNET = 1;
+  DEVNET = 2;
+}
