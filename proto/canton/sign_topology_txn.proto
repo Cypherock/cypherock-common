@@ -36,7 +36,8 @@ enum SignTopologyTxnStatus {
 message SignTopologyTxnInitiateRequest {
   bytes wallet_id = 1;
   repeated uint32 derivation_path = 2;
-  optional CantonNetworkType network = 3;
+  uint32 topology_txns_count = 3;
+  optional CantonNetworkType network = 4;
 }
 
 message SignTopologyTxnConfirmationResponse {
