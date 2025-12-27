@@ -31,6 +31,7 @@ message GetDeviceInfoResultResponse {
 
   bool is_initial = 5;
   OnboardingStep onboarding_step = 6;
+  common.FirmwareVariant firmware_variant = 7;
 }
 
 message GetDeviceInfoRequest {
