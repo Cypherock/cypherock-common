@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package cardano;
+
+import "error.proto";
+
+enum GetPublicKeysStatus {
+  GET_PUBLIC_KEYS_STATUS_INIT = 0;
+  GET_PUBLIC_KEYS_STATUS_CONFIRM = 1;
+  GET_PUBLIC_KEYS_STATUS_SEED_GENERATED = 2;
+  GET_PUBLIC_KEYS_STATUS_VERIFY_STAKE = 3;
+  GET_PUBLIC_KEYS_STATUS_VERIFY_PAYMENT = 4;
+}
+
+message GetPublicKeysDerivationPath {
+  repeated uint32 path = 1;
+}
+
+
+message GetPublicKeysIntiateRequest {
+  bytes wallet_id = 1;
+
+  /*
+   * We only ever send payment node derivation path to the device.
+   * The device simply modifies the derivation path to convert it into a stake derivation path.
+   *
+   * stake address:    m'/1852'/1815'/account'/2/0
+   * payment address:  m'/1852'/1815'/account'/0/i
+   */
+  repeated GetPublicKeysDerivationPath derivation_paths = 2;
+}
+
+message GetPublicKeysResultResponse {
+  repeated bytes payment_pub_keys = 1;
+  repeated bytes stake_pub_keys = 2;
+}
+
+message GetPublicKeysFetchNextRequest {
+}
+
+message GetPublicKeysResultRequest {
+}
+
+message GetPublicKeyStakeVerifyResponse  {
+}
+
+message GetPublicKeysRequest {
+  oneof request {
+    GetPublicKeysIntiateRequest initiate = 1;
+    GetPublicKeysResultRequest result = 2;
+    GetPublicKeysFetchNextRequest fetch_next = 3;
+  }
+}
+
+message GetPublicKeysResponse {
+  oneof response {
+    GetPublicKeysResultResponse result = 1;
+    GetPublicKeyStakeVerifyResponse stake_verify = 2;
+
+    error.CommonError common_error = 3;
+  }
+}
