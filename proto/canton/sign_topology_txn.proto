@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+import "error.proto";
+import "canton/common.proto";
+
+
+package canton;
+
+/**
+ * Example:
+ *
+ *        Host                       Device
+ *
+ * SignTopologyTxnInitiateRequest  => 
+ *                         <= SignTopologyTxnConfirmationResponse
+ * ---------Send all 3 types of topology txns one by one-------
+ * SignTopologyTxnData             =>
+ *                         <= SignTopologyTxnDataAccepted
+ * SignTopologyTxnData             =>
+ *                         <= SignTopologyTxnDataAccepted
+ * SignTopologyTxnData             =>
+ *                         <= SignTopologyTxnDataAccepted
+ *
+ * **** Device has all transaction information ****
+ *
+ * SignTopologyTxnSignatureRequest =>
+ *                         <= SignTopologyTxnSignatureResponse
+ */
+enum SignTopologyTxnStatus {
+  SIGN_TOPOLOGY_TXN_STATUS_INIT = 0;
+  SIGN_TOPOLOGY_TXN_STATUS_CONFIRM = 1;
+  SIGN_TOPOLOGY_TXN_STATUS_VERIFY = 2;
+  SIGN_TOPOLOGY_TXN_STATUS_SEED_GENERATED = 3;
+}
+
+message SignTopologyTxnInitiateRequest {
+  bytes wallet_id = 1;
+  repeated uint32 derivation_path = 2;
+  uint32 topology_txns_count = 3;
+  optional CantonNetworkType network = 4;
+}
+
+message SignTopologyTxnConfirmationResponse {
+}
+
+message SignTopologyTxnData {
+  bytes serialized_txn = 1;
+}
+
+message SignTopologyTxnDataAccepted {}
+
+message SignTopologyTxnSignatureResponse {
+  bytes signature = 1;
+}
+
+message SignTopologyTxnSignatureRequest {
+}
+
+message SignTopologyTxnRequest {
+  oneof request {
+    SignTopologyTxnInitiateRequest initiate = 1;
+    SignTopologyTxnData txn_data = 2;
+    SignTopologyTxnSignatureRequest signature = 3;
+  }
+}
+
+message SignTopologyTxnResponse {
+  oneof response {
+    SignTopologyTxnConfirmationResponse confirmation = 1;
+    SignTopologyTxnDataAccepted data_accepted = 2;
+    SignTopologyTxnSignatureResponse signature = 4;
+
+    error.CommonError common_error = 5;
+  }
+}
