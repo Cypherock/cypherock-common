@@ -4,11 +4,13 @@ package cardano;
 
 import "error.proto";
 import "cardano/get_public_key.proto";
+import "cardano/sign_txn.proto";
 
 message Query {
   oneof request {
     GetPublicKeysRequest get_public_keys = 1;
     GetPublicKeysRequest get_user_verified_public_key = 2;
+    SignTxnRequest sign_txn = 3;
   }
 }
 
@@ -16,7 +18,8 @@ message Result {
   oneof response {
     GetPublicKeysResponse get_public_keys = 1;
     GetPublicKeysResponse get_user_verified_public_key = 2;
+    SignTxnResponse sign_txn = 3;
 
-    error.CommonError common_error = 3;
+    error.CommonError common_error = 4;
   }
 }
