@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+import "common.proto";
+import "error.proto";
+
+package canton;
+
+/**
+ * Example:
+ *
+ *        Host                       Device
+ *
+ * SignTxnExternalInitiateRequest  => 
+ *                         <= SignTxnExternalConfirmationResponse
+ * SignTxnExternalData             =>
+ *                         <= SignTxnExternalDataAccepted
+ *                        ....
+ * SignTxnExternalData             =>
+ *                         <= SignTxnExternalDataAccepted
+ *
+ * **** Device has all transaction information ****
+ *
+ * SignTxnExternalSignatureRequest =>
+ *                         <= SignTxnExternalSignatureResponse
+ */
+enum SignTxnExternalStatus {
+  SIGN_TXN_EXTERNAL_STATUS_INIT = 0;
+  SIGN_TXN_EXTERNAL_STATUS_CONFIRM = 1;
+  SIGN_TXN_EXTERNAL_STATUS_VERIFY = 2;
+  SIGN_TXN_EXTERNAL_STATUS_SEED_GENERATED = 3;
+}
+
+enum SignTxnExternalSupportedTxnTypes {
+  SUPPORTED_TXN_TYPE_NAMESPACE_DELEGATION = 0;
+}
+
+message SignTxnExternalInitiateRequest {
+  bytes wallet_id = 1;
+  repeated uint32 derivation_path = 2;
+  SignTxnExternalSupportedTxnTypes txn_type = 3;
+  uint32 transaction_size = 4;
+}
+
+message SignTxnExternalConfirmationResponse {
+}
+
+message SignTxnExternalData {
+  common.ChunkPayload chunk_payload = 1;
+}
+
+message SignTxnExternalDataAccepted {
+  common.ChunkAck chunk_ack = 1;
+}
+
+message SignTxnExternalSignatureResponse {
+  bytes signature = 1;
+}
+
+message SignTxnExternalSignatureRequest {
+}
+
+message SignTxnExternalRequest {
+  oneof request {
+    SignTxnExternalInitiateRequest initiate = 1;
+    SignTxnExternalData txn_data = 2;
+    SignTxnExternalSignatureRequest signature = 3;
+  }
+}
+
+message SignTxnExternalResponse {
+  oneof response {
+    SignTxnExternalConfirmationResponse confirmation = 1;
+    SignTxnExternalDataAccepted data_accepted = 2;
+    SignTxnExternalSignatureResponse signature = 3;
+
+    error.CommonError common_error = 4;
+  }
+}
