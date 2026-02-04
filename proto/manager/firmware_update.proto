@@ -33,10 +33,12 @@ package manager;
 enum FirmwareUpdateError {
   FIRMWARE_UPDATE_ERROR_UNKNOWN = 0;
   FIRMWARE_UPDATE_ERROR_VERSION_NOT_ALLOWED = 1;
+  FIRMWARE_UPDATE_ERROR_VARIANT_NOT_ALLOWED = 2;
 }
 
 message FirmwareUpdateInitiateRequest {
   common.Version version = 1;
+  common.FirmwareVariant variant = 2;
 }
 
 message FirmwareUpdateConfirmedResponse {
