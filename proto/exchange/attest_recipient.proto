@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package exchange;
+
+import "error.proto";
+
+message AttestRecipientRequest {
+  oneof request { AttestRecipientInitiateRequest initiate = 1; }
+}
+
+message AttestRecipientInitiateRequest {
+  string chain = 1;
+  string address = 2;
+}
+
+message AttestRecipientResponse {
+  oneof response {
+    AttestRecipientResultResponse result = 1;
+    error.CommonError common_error = 2;
+  }
+}
+
+message AttestRecipientResultResponse {}
