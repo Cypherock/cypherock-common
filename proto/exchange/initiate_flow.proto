@@ -14,10 +14,15 @@ message InitiateExchangeRequest {
   CoinDetails to = 2;
 }
 
+message InitiatePrivateSendRequest { CoinDetails from = 1; }
+
 message InitiateExchangeResponse {}
 
 message InitiateFlowRequest {
-  oneof request { InitiateExchangeRequest initiate = 1; }
+  oneof request {
+    InitiateExchangeRequest initiate = 1;
+    InitiatePrivateSendRequest initiate_private_send = 2;
+  }
 }
 
 message InitiateFlowResponse {

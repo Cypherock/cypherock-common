@@ -5,6 +5,7 @@ import "exchange/initiate_flow.proto";
 import "exchange/get_signature.proto";
 import "exchange/store_signature.proto";
 import "exchange/close_flow.proto";
+import "exchange/attest_recipient.proto";
 
 package exchange;
 
@@ -14,6 +15,7 @@ message Query {
     GetSignatureRequest get_signature = 2;
     StoreSignatureRequest store_signature = 3;
     CloseFlowRequest close_flow = 4;
+    AttestRecipientRequest attest_recipient = 5;
   }
 }
 
@@ -24,5 +26,6 @@ message Result {
     StoreSignatureResponse store_signature = 3;
     CloseFlowResponse close_flow = 4;
     error.CommonError common_error = 5;
+    AttestRecipientResponse attest_recipient = 6;
   }
 }
